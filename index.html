@@ -339,7 +339,7 @@ details summary::after{content:" ▾";color:var(--muted)}
 
 <div id="errBox" style="display:none;position:fixed;left:10px;right:10px;bottom:10px;background:#b8322a;color:#fff;font-size:12px;line-height:1.5;padding:10px 12px;border-radius:10px;z-index:99;word-break:break-all"></div>
 <script>
-window.onerror=function(msg,src,line,col){try{var b=document.getElementById('errBox');b.style.display='block';b.textContent='오류: '+msg+' (줄 '+line+':'+col+') — 이 화면을 캡처해 주세요';}catch(e){}};
+window.onerror=function(msg,src,line,col){if(!msg||String(msg).indexOf('Script error')===0)return;if(src&&src.indexOf(location.host)<0)return;try{var b=document.getElementById('errBox');b.style.display='block';b.textContent='오류: '+msg+' (줄 '+line+':'+col+') — 이 화면을 캡처해 주세요';}catch(e){}};
 window.addEventListener('unhandledrejection',function(e){try{window.onerror(String(e.reason),'',0,0)}catch(_){}});
 </script>
 <script>
@@ -548,11 +548,13 @@ function renderQ(){
   q.o.forEach((o,i)=>{
     const b=document.createElement('button');b.className='opt'+(ans[cur]===i?' sel':'');b.textContent=o[0];
     b.onclick=()=>{ans[cur]=i;$('opts').querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');
-      setTimeout(()=>{cur<Q.length-1?(cur++,renderQ()):finish()},250)};
+      if(cur<Q.length-1){setTimeout(()=>{cur++;renderQ()},250)}else{showFinishBtn();setTimeout(finish,400)}};
     $('opts').appendChild(b);
   });
   $('prevBtn').style.visibility=cur===0?'hidden':'visible';
 }
+function showFinishBtn(){if($('finBtn'))return;const b=document.createElement('button');b.id='finBtn';b.className='btn';b.style.marginTop='6px';b.textContent='🔮 결과 보기';
+  b.onclick=()=>{finishing=false;finish()};$('opts').appendChild(b)}
 function prevQ(){if(cur>0){cur--;renderQ()}}
 
 let finishing=false;
@@ -692,7 +694,7 @@ function readHash(){
   const d=D[friend.top],fn=esc(friend.name||"친구");
   $('friendBanner').innerHTML=`<div class="friend-banner"><div style="font-size:40px">${d.emo}</div><b>${fn}</b>님은 <b>${d.kr}</b> — ${d.nick}<br><span style="font-size:13px;color:#cbbfae">나도 테스트하면 ${fn}님과의 궁합이 나와요!</span></div>`;
 }
-window.addEventListener('hashchange',()=>{readHash();go('s-home')});
+window.addEventListener('hashchange',()=>{readHash();if($('s-home').classList.contains('on'))go('s-home')});
 readHash();
 </script>
 </body>
