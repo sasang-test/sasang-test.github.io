@@ -72,7 +72,23 @@ input:disabled{opacity:.45}
 .srow{display:flex;gap:6px}
 .srow input{flex:1;min-width:0}
 .srow button{flex-shrink:0;border:1px solid var(--gold);background:rgba(201,169,97,.15);color:var(--gold2);border-radius:3px;padding:0 14px;font-size:14px;cursor:pointer}
-#map{height:240px;border:1px solid var(--line);border-radius:3px;margin-top:8px;background:#0b1029}
+.placebtn{display:flex;align-items:center;gap:10px;width:100%;min-height:56px;padding:10px 13px;border:1px solid rgba(236,217,162,.5);border-radius:3px;background:rgba(28,34,96,.55);color:var(--text);cursor:pointer;text-align:left;font:inherit}
+.placebtn .pi{font-size:20px}.placebtn .pt{flex:1;min-width:0}.placebtn b{display:block;font-size:15.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.placebtn small{color:var(--muted);font-size:12px}.placebtn em{font-style:normal;color:var(--gold2);font-size:13.5px;flex-shrink:0}
+.mapfull{position:fixed;inset:0;z-index:1900;display:none;flex-direction:column;background:#2b2f78}
+.mapfull.on{display:flex}
+.mtop{display:flex;gap:6px;padding:10px 12px;background:#2e3684;border-bottom:1px solid var(--line)}
+.mtop input{flex:1;min-width:0}
+.mback,.msearch{flex-shrink:0;border:1px solid var(--line);background:transparent;color:var(--gold2);border-radius:3px;padding:0 13px;font-size:15px;cursor:pointer}
+.msearch{background:var(--gold);color:#1a1405;border-color:var(--gold);font-weight:700}
+.mapfull .sres{position:absolute;top:69px;left:12px;right:12px;z-index:3000;max-height:50vh;overflow:auto;box-shadow:0 10px 24px rgba(10,12,50,.4)}
+.mapfull .sres button{background:#2e3684;margin-top:0;border-radius:0;border-top:0}.mapfull .sres button:first-child{border-top:1px solid rgba(236,217,162,.3)}
+.mapfull .sres p{background:#2e3684;padding:10px;border-radius:3px}
+.mwrap{position:relative;flex:1}
+#map{position:absolute;inset:0;background:#e8e4da}
+.pin{position:absolute;left:50%;top:50%;transform:translate(-50%,-100%);z-index:500;pointer-events:none;margin-top:2px}
+.mtip{position:absolute;left:50%;top:12px;transform:translateX(-50%);z-index:500;background:rgba(43,47,120,.9);color:var(--gold2);font-size:13px;padding:7px 14px;border-radius:20px;white-space:nowrap;pointer-events:none;border:1px solid var(--line)}
+.mbot{padding:14px 16px 18px;background:#2e3684;border-top:1px solid var(--line)}
+.mbot .mp small{display:block;color:var(--muted);font-size:12px}.mbot .mp b{font-size:16.5px;color:#f4efe0;font-family:var(--serif)}
 .leaflet-container{font-family:inherit}
 .place{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:14px;color:var(--gold2);flex-wrap:wrap}
 .place small{color:var(--muted)}
@@ -245,12 +261,8 @@ details.gift{margin:4px 0 14px;border-top:1px solid rgba(236,217,162,.25);paddin
     <label class="l" for="btIn">태어난 시간</label>
     <input type="time" id="btIn" value="12:00">
     <label class="chk"><input type="checkbox" id="noTime" onchange="$('btIn').disabled=this.checked"> 태어난 시간을 몰라요</label>
-    <label class="l" for="placeQ">태어난 곳</label>
-    <div class="srow"><input type="text" id="placeQ" placeholder="도시·동네 검색 (예: 부산 해운대)" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();searchPlace()}"><button type="button" onclick="searchPlace()">검색</button></div>
-    <div class="sres" id="sres"></div>
-    <div id="map"></div>
-    <div class="place"><span>📍</span><span id="placeName">서울</span><small id="placeCo"></small></div>
-    <p class="hint">지도를 누르거나 핀을 끌어서 태어난 곳을 정할 수 있어요.</p>
+    <label class="l">태어난 곳</label>
+    <button type="button" class="placebtn" onclick="openMap()"><span class="pi">📍</span><span class="pt"><b id="placeName">서울</b><small id="placeCo"></small></span><em>지도에서 고르기 ›</em></button>
     <select id="cityIn" style="margin-top:8px" aria-label="주요 도시 빠른 선택"></select>
     <div id="tzRow" style="display:none">
       <label class="l" for="tzIn">현지 시간대 (해외 출생)</label>
@@ -286,6 +298,14 @@ details.gift{margin:4px 0 14px;border-top:1px solid rgba(236,217,162,.25);paddin
 </div>
 
 <div class="toast" id="toast"></div>
+<div class="mapfull" id="mapModal" role="dialog" aria-label="태어난 곳 지도에서 고르기">
+  <div class="mtop"><button type="button" class="mback" onclick="closeMap()" aria-label="닫기">←</button><input type="text" id="placeQ" placeholder="도시·동네 검색 (예: 부산 해운대)" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();searchPlace()}"><button type="button" class="msearch" onclick="searchPlace()">검색</button></div>
+  <div class="sres" id="sres"></div>
+  <div class="mwrap"><div id="map"></div>
+    <div class="pin" aria-hidden="true"><svg width="40" height="54" viewBox="0 0 40 54"><ellipse cx="20" cy="51" rx="7" ry="2.5" fill="rgba(0,0,0,.3)"/><path d="M20 2C10 2 3 9.5 3 19c0 12 17 30 17 30s17-18 17-30C37 9.5 30 2 20 2z" fill="#c9a961" stroke="#fff" stroke-width="2.5"/><circle cx="20" cy="19" r="6.5" fill="#2b2f78"/><text x="20" y="20" text-anchor="middle" dominant-baseline="central" fill="#ecd9a2" font-size="8">✦</text></svg></div>
+    <div class="mtip">지도를 움직여 핀을 태어난 곳에 맞춰 주세요</div></div>
+  <div class="mbot"><div class="mp"><small>선택한 위치</small><b id="mPick">서울</b></div><button type="button" class="btn" style="margin-top:12px" onclick="confirmMap()">이 위치로 선택</button></div>
+</div>
 <div class="modal" id="payModal" onclick="if(event.target===this)closePay()">
   <div class="sheet">
     <button class="closex" onclick="closePay()" aria-label="닫기">✕</button>
@@ -397,26 +417,29 @@ function setPlace(lat,lon,name,fly,keepTz){place={lat:+lat,lon:+lon,name:name||p
   $('placeName').textContent=place.name;$('placeCo').textContent=`${Math.abs(lat).toFixed(2)}°${lat>=0?"N":"S"} ${Math.abs(lon).toFixed(2)}°${lon>=0?"E":"W"}`;
   const kr=inKorea(lat,lon);$('tzRow').style.display=kr?"none":"block";
   if(!kr&&!keepTz){const g=Math.round(lon/15);$('tzIn').value=String(TZS.reduce((a,b)=>Math.abs(b-g)<Math.abs(a-g)?b:a))}
-  if(map){marker.setLatLng([lat,lon]);if(fly)map.setView([lat,lon],Math.max(map.getZoom(),9))}}
-function ensureMap(){if(map){setTimeout(()=>map.invalidateSize(),60);return}
-  if(!window.L){$('map').innerHTML='<p class="hint" style="padding:14px">지도를 불러오지 못했어요. 위의 검색이나 아래 도시 선택을 이용해 주세요.</p>';return}
-  map=L.map('map',{zoomControl:true,attributionControl:true}).setView([place.lat,place.lon],7);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18,subdomains:'abcd',attribution:'© OpenStreetMap © CARTO'}).addTo(map);
-  const icon=L.divIcon({className:'',html:'<div style="width:22px;height:22px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#e7cf8f;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.6)"></div>',iconSize:[22,22],iconAnchor:[11,22]});
-  marker=L.marker([place.lat,place.lon],{draggable:true,icon:icon}).addTo(map);
-  map.on('click',e=>pick(e.latlng.lat,e.latlng.lng));marker.on('dragend',()=>{const p=marker.getLatLng();pick(p.lat,p.lng)});
-  setTimeout(()=>map.invalidateSize(),60)}
-let revT=0;
-function pick(lat,lon){setPlace(lat,lon,"지도에서 고른 곳");const my=++revT;
-  fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=12&accept-language=ko&lat=${lat}&lon=${lon}`).then(r=>r.json()).then(d=>{if(my!==revT||!d)return;
-    const a=d.address||{},nm=[a.city||a.county||a.state||a.country,a.borough||a.suburb||a.town||a.village||a.city_district].filter(Boolean);
-    const name=nm.length?[...new Set(nm)].join(" "):(d.display_name||"").split(", ").slice(0,2).join(" ");if(name){place.name=name;$('placeName').textContent=name}}).catch(()=>{})}
+}
+function ensureMap(){}
+let temp=null,revT=0,revTimer=0,skipRev=false;
+function openMap(){temp={lat:place.lat,lon:place.lon,name:place.name};$('mPick').textContent=temp.name;$('sres').innerHTML="";$('placeQ').value="";$('mapModal').classList.add('on');document.body.style.overflow="hidden";
+  if(!window.L){$('map').innerHTML='<p class="hint" style="padding:20px;color:#333">지도를 불러오지 못했어요. 위의 검색창이나 이전 화면의 도시 선택을 이용해 주세요.</p>';return}
+  if(!map){map=L.map('map',{zoomControl:true,attributionControl:true});
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
+    map.on('movestart',()=>{$('sres').innerHTML=""});
+    map.on('moveend',()=>{if(skipRev){skipRev=false;return}const c=map.getCenter();temp.lat=c.lat;temp.lon=c.lng;temp.name="지도에서 고른 곳";$('mPick').textContent="위치 확인 중…";clearTimeout(revTimer);revTimer=setTimeout(()=>reverse(c.lat,c.lng),650)})}
+  skipRev=true;map.setView([place.lat,place.lon],inKorea(place.lat,place.lon)&&place.name!=="서울"?12:7,{animate:false});setTimeout(()=>map.invalidateSize(),80)}
+function closeMap(){$('mapModal').classList.remove('on');document.body.style.overflow=""}
+function confirmMap(){setPlace(temp.lat,temp.lon,temp.name);closeMap();toast("📍 "+temp.name+"(으)로 정했어요")}
+function reverse(lat,lon){const my=++revT;
+  fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=14&accept-language=ko&lat=${lat}&lon=${lon}`).then(r=>r.json()).then(d=>{if(my!==revT||!d)return;
+    const a=d.address||{},nm=[a.city||a.province||a.state||a.country,a.borough||a.county||a.town,a.suburb||a.quarter||a.village||a.neighbourhood].filter(Boolean);
+    const name=nm.length?[...new Set(nm)].join(" "):(d.display_name||"").split(", ").slice(0,2).reverse().join(" ");temp.name=name||"지도에서 고른 곳";$('mPick').textContent=temp.name}).catch(()=>{if(my===revT)$('mPick').textContent=temp.name})}
 function searchPlace(){const q=($('placeQ').value||"").trim();if(!q)return;$('sres').innerHTML='<p class="hint">찾는 중…</p>';
   fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&accept-language=ko&q=${encodeURIComponent(q)}`).then(r=>r.json()).then(list=>{
     if(!list||!list.length){$('sres').innerHTML='<p class="hint">검색 결과가 없어요. 지도를 직접 눌러 주세요.</p>';return}
     window._sr=list;$('sres').innerHTML=list.map((x,i)=>`<button type="button" onclick="useRes(${i})">📍 ${esc(x.display_name)}</button>`).join("")
   }).catch(()=>{$('sres').innerHTML='<p class="hint">검색에 실패했어요. 지도를 직접 눌러 주세요.</p>'})}
-function useRes(i){const x=window._sr[i];setPlace(+x.lat,+x.lon,x.display_name.split(", ").slice(0,2).reverse().join(" "),true);$('sres').innerHTML=""}
+function useRes(i){const x=window._sr[i];temp={lat:+x.lat,lon:+x.lon,name:x.display_name.split(", ").slice(0,3).reverse().join(" ")};$('mPick').textContent=temp.name;$('sres').innerHTML="";
+  if(map){skipRev=true;map.setView([temp.lat,temp.lon],13)}}
 
 /* ===== 프로필 ===== */
 function readForm(){
