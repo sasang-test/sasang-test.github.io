@@ -382,15 +382,18 @@ details summary::after{content:" ▾";color:var(--muted)}
     <button class="closex" onclick="closePay()">✕</button>
     <div class="title-s">🔮 상세풀이 열기</div>
     <div class="desc-s">한 번 결제하면 이 기기에서 계속 볼 수 있어요.</div>
-    <div class="step"><span class="n">1</span><div class="c"><b>990원을 보내주세요</b><br>보낼 때 메모(받는 분 표시)에 주문번호 <span class="order" id="orderNo"></span>을 꼭 적어주세요.
+    <div class="step"><span class="n">1</span><div class="c"><b>990원을 보내주세요</b><br>보낼 때 메모에 주문번호 <span class="order" id="orderNo"></span>을 적어주시면 좋아요.
       <div id="payBtns"></div></div></div>
-    <div class="step"><span class="n">2</span><div class="c"><b>주문번호로 코드를 받으세요</b><br>입금이 확인되면 잠금 해제 코드를 보내드려요.
-      <div id="contactBtns"></div></div></div>
-    <div class="step"><span class="n">3</span><div class="c"><b>받은 코드를 입력하세요</b>
-      <input type="text" id="codeIn" placeholder="XXXX-XXXX" maxlength="9" autocomplete="off" style="margin-top:8px">
+    <div class="step"><span class="n">2</span><div class="c"><b>보내셨으면 입금자명을 적고 눌러주세요</b>
+      <input type="text" id="payerIn" placeholder="입금자명" maxlength="10" autocomplete="off" style="margin-top:8px">
+      <div class="err" id="payErr"></div>
+      <button class="btn" id="paidBtn" onclick="honorPaid()">990원 보냈어요 · 상세풀이 열기</button>
+      <p style="font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.6">입금 확인 없이 바로 열리는 양심 결제예요. 보내주신 990원은 사이트 운영에 소중히 쓰여요 🙏</p></div></div>
+    <details style="margin-bottom:14px"><summary style="font-size:13.5px">🎁 선물받은 코드가 있어요</summary>
+      <input type="text" id="codeIn" placeholder="XXXX-XXXX" maxlength="9" autocomplete="off" style="margin-top:10px">
       <div class="err" id="codeErr"></div>
-      <button class="btn" id="codeBtn" onclick="tryCode()">잠금 해제</button></div></div>
-    <p style="font-size:12px;color:var(--muted);line-height:1.6">재미와 생활 참고용 풀이예요. 질병의 진단·치료를 대신하지 않아요. 입금 후 코드를 못 받았다면 위 연락처로 주문번호와 함께 문의해 주세요.</p>
+      <button class="btn dark" id="codeBtn" onclick="tryCode()">코드로 열기</button></details>
+    <p style="font-size:12px;color:var(--muted);line-height:1.6">재미와 생활 참고용 풀이예요. 질병의 진단·치료를 대신하지 않아요.</p>
   </div>
 </div>
 
@@ -409,7 +412,7 @@ const PAY={
   price:"990원",
   kakaopay:"",        // 카카오페이 송금 링크 (예: https://qr.kakaopay.com/xxxx)
   toss:"",            // 토스 송금 링크 (예: https://toss.me/아이디/990)
-  account:"",         // 계좌 (예: 카카오뱅크 3333-00-0000000 홍길동)
+  account:"토스뱅크 1000-0656-1434",
   contact:"",         // 코드 받을 연락처 링크 (예: 카카오톡 오픈채팅 https://open.kakao.com/o/xxxx)
   contactLabel:"카카오톡 오픈채팅으로 주문번호 보내기"
 };
@@ -752,11 +755,20 @@ function openPay(){
   const pb=[];
   if(PAY.kakaopay)pb.push(`<a class="btn kakao" href="${PAY.kakaopay}" target="_blank" rel="noopener" style="text-decoration:none;display:block;text-align:center">카카오페이로 ${PAY.price} 보내기</a>`);
   if(PAY.toss)pb.push(`<a class="btn dark mt10" href="${PAY.toss}" target="_blank" rel="noopener" style="text-decoration:none;display:block;text-align:center">토스로 ${PAY.price} 보내기</a>`);
-  if(PAY.account)pb.push(`<button class="btn dark mt10" onclick="copyText(PAY.account,'계좌번호를 복사했어요')">🏦 ${esc(PAY.account)} 복사</button>`);
+  if(PAY.account)pb.push(`<button class="btn dark mt10" onclick="copyText(PAY.account.replace(/-/g,''),'계좌번호를 복사했어요. 송금 앱에 붙여넣으세요')">🏦 ${esc(PAY.account)} 복사</button>`);
   if(!pb.length)pb.push(`<div class="note" style="margin-top:8px">결제 안내를 준비하고 있어요. 조금만 기다려 주세요!</div>`);
   $('payBtns').innerHTML=pb.join("");
-  $('contactBtns').innerHTML=PAY.contact?`<a class="btn dark" href="${PAY.contact}" target="_blank" rel="noopener" style="text-decoration:none;display:block;text-align:center" onclick="copyText('주문번호 '+orderNo+' / 990원 입금했어요','주문번호를 복사했어요. 채팅방에 붙여넣으세요')">💬 ${esc(PAY.contactLabel)}</a>`:"";
-  $('codeErr').textContent="";$('payModal').classList.add('on');
+  if($('contactBtns'))$('contactBtns').innerHTML=PAY.contact?`<a class="btn dark" href="${PAY.contact}" target="_blank" rel="noopener" style="text-decoration:none;display:block;text-align:center" onclick="copyText('주문번호 '+orderNo+' / 990원 입금했어요','주문번호를 복사했어요. 채팅방에 붙여넣으세요')">💬 ${esc(PAY.contactLabel)}</a>`:"";
+  $('codeErr').textContent="";$('payErr').textContent="";$('payModal').classList.add('on');
+}
+const HC="WDRONC1MSFVY";
+async function honorPaid(){
+  const nm=($('payerIn').value||"").trim();
+  if(!nm){$('payErr').textContent="입금자명을 적어주세요";return}
+  $('paidBtn').disabled=true;$('paidBtn').textContent="여는 중…";
+  try{await unlockWith(atob(HC));try{localStorage.setItem('sasang_payer',nm+" / "+orderNo)}catch(e){}closePay();toast("🔓 감사합니다! 상세풀이가 열렸어요");if(R)showResult()}
+  catch(e){$('payErr').textContent="이 브라우저에서는 열 수 없어요. 크롬·사파리로 열어주세요"}
+  $('paidBtn').disabled=false;$('paidBtn').textContent="990원 보냈어요 · 상세풀이 열기";
 }
 function closePay(){$('payModal').classList.remove('on')}
 async function tryCode(){
