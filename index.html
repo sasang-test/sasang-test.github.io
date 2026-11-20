@@ -28,7 +28,7 @@ body{min-height:100vh;background:radial-gradient(ellipse at 50% -10%,#3a2a4a 0%,
 .screen{display:none;animation:fade .5s ease}
 .screen.on{display:block}
 @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-button{font-family:inherit}
+button{font-family:inherit;touch-action:manipulation}
 
 /* landing */
 .top-badge{display:inline-block;border:1px solid var(--gold);color:var(--gold2);font-size:12px;padding:4px 12px;border-radius:20px;letter-spacing:.08em}
@@ -220,7 +220,7 @@ details summary::after{content:" ▾";color:var(--muted)}
     <div class="qnum" id="qnum"></div>
     <div class="qtext" id="qtext"></div>
     <div id="opts"></div>
-    <div class="qnav"><button id="prevBtn" onclick="prevQ()">← 이전 문항</button><button onclick="go('s-home')">처음으로</button></div>
+    <div class="qnav"><button id="prevBtn" onclick="prevQ()">← 이전 문항</button><button id="homeBtn" onclick="quizHome(this)">처음으로</button></div>
   </div>
 </section>
 
@@ -538,31 +538,39 @@ function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remo
 document.querySelectorAll('.seg').forEach(seg=>seg.querySelectorAll('button').forEach(b=>b.onclick=()=>{
   seg.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');info[seg.dataset.k]=b.textContent;}));
 
-function startQuiz(){finishing=false;cur=0;ans.fill(null);renderQ();go('s-quiz')}
+function startQuiz(){finishing=false;cur=0;ans=new Array(Q.length).fill(null);renderQ();go('s-quiz')}
+let locked=false;
 function renderQ(){
-  const q=Q[cur];
-  $('qcat').textContent=q.c;$('qcount').textContent=(cur+1)+" / "+Q.length;
-  $('qbar').style.width=(cur/Q.length*100)+"%";
-  $('qnum').textContent="Q"+(cur+1);
+  if(cur<0)cur=0; if(cur>Q.length-1)cur=Q.length-1;
+  const idx=cur,q=Q[idx];locked=false;
+  $('qcat').textContent=q.c;$('qcount').textContent=(idx+1)+" / "+Q.length;
+  $('qbar').style.width=(idx/Q.length*100)+"%";
+  $('qnum').textContent="Q"+(idx+1);
   $('qtext').textContent=q.q;$('opts').innerHTML="";
   q.o.forEach((o,i)=>{
-    const b=document.createElement('button');b.className='opt'+(ans[cur]===i?' sel':'');b.textContent=o[0];
-    b.onclick=()=>{ans[cur]=i;$('opts').querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');
-      if(cur<Q.length-1){setTimeout(()=>{cur++;renderQ()},250)}else{showFinishBtn();setTimeout(finish,400)}};
+    const b=document.createElement('button');b.className='opt'+(ans[idx]===i?' sel':'');b.textContent=o[0];
+    b.onclick=()=>{
+      if(locked||idx!==cur)return; // 연타·중복 터치 무시
+      locked=true;ans[idx]=i;
+      $('opts').querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');
+      if(idx<Q.length-1){setTimeout(()=>{cur=idx+1;renderQ()},250)}
+      else{showFinishBtn();setTimeout(finish,400)}
+    };
     $('opts').appendChild(b);
   });
-  $('prevBtn').style.visibility=cur===0?'hidden':'visible';
+  $('prevBtn').style.visibility=idx===0?'hidden':'visible';
 }
 function showFinishBtn(){if($('finBtn'))return;const b=document.createElement('button');b.id='finBtn';b.className='btn';b.style.marginTop='6px';b.textContent='🔮 결과 보기';
   b.onclick=()=>{finishing=false;finish()};$('opts').appendChild(b)}
-function prevQ(){if(cur>0){cur--;renderQ()}}
+function quizHome(b){if(b.dataset.armed){b.dataset.armed='';b.textContent='처음으로';go('s-home');return}b.dataset.armed='1';b.textContent='한 번 더 누르면 처음으로';setTimeout(()=>{b.dataset.armed='';b.textContent='처음으로'},2500)}
+function prevQ(){if(locked)return;if(cur>0){cur--;renderQ()}}
 
 let finishing=false;
 function finish(){
   if(finishing)return; finishing=true;
   $('qbar').style.width="100%";
   const s={TY:0,SY:0,TE:0,SE:0};
-  ans.forEach((a,i)=>{if(a==null||!Q[i].o[a])return;const w=Q[i].o[a][1];for(const k in w)s[k]+=w[k]});
+  Q.forEach((q,i)=>{const a=ans[i];if(a==null||!q.o[a])return;const w=q.o[a][1];for(const k in w)s[k]+=w[k]});
   s.TY*=1.1;
   const tot=Object.values(s).reduce((a,b)=>a+b,0)||1;
   const pct={};ORDER.forEach(k=>pct[k]=Math.round(s[k]/tot*100));
@@ -684,7 +692,7 @@ function kakaoShare(){const d=D[R.top],nm=R.name||"나";
     description:"너는 무슨 체질이야? 테스트하면 우리 궁합도 나와 💞",imageUrl:OG_IMAGE,
     link:{mobileWebUrl:shareURL(),webUrl:shareURL()}},
     buttons:[{title:'내 체질도 보기',link:{mobileWebUrl:shareURL(),webUrl:shareURL()}}]})}catch(e){copyLink()}}
-function restart(){ans.fill(null);go('s-home')}
+function restart(){ans=new Array(Q.length).fill(null);go('s-home')}
 
 /* 친구 링크로 들어온 경우 */
 function readHash(){
