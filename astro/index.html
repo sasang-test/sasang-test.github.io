@@ -348,6 +348,11 @@ const PAY={
   kakaopay:"https://qr.kakaopay.com/FPgeFkAPs1ef09684",
   toss:""   // 토스 송금 링크 (예: https://toss.me/아이디/990)
 };
+/* ===== 카카오 장소 검색 (병원·건물·가게 이름까지 검색) =====
+   developers.kakao.com 에서 앱을 만들고 'JavaScript 키'를 아래에 넣으세요.
+   (앱 설정 > 플랫폼 > Web 에 https://sasang-test.github.io 등록, 카카오맵 사용 설정 ON)
+   비워 두면 OpenStreetMap 검색만 사용해요. */
+const KAKAO_JS_KEY="";
 const CITIES=[["서울",37.5665,126.978],["부산",35.1796,129.0756],["대구",35.8714,128.6014],["인천",37.4563,126.7052],["광주",35.1595,126.8526],["대전",36.3504,127.3845],["울산",35.5384,129.3114],["세종",36.48,127.289],["수원",37.2636,127.0286],["성남",37.42,127.1265],["고양",37.6584,126.832],["의정부",37.7381,127.0337],["춘천",37.8813,127.7298],["원주",37.3422,127.9202],["강릉",37.7519,128.8761],["청주",36.6424,127.489],["충주",36.991,127.926],["천안",36.8151,127.1139],["공주",36.4465,127.119],["전주",35.8242,127.148],["군산",35.9676,126.7366],["목포",34.8118,126.3922],["여수",34.7604,127.6622],["순천",34.9506,127.4872],["포항",36.019,129.3435],["경주",35.8562,129.2247],["안동",36.5684,128.7294],["구미",36.1195,128.3446],["창원·마산",35.2281,128.6811],["진주",35.18,128.108],["김해",35.2285,128.8894],["통영·거제",34.8806,128.6211],["제주",33.4996,126.5312],["서귀포",33.2541,126.56],["평양",39.0392,125.7625]];
 const $=id=>document.getElementById(id);
 const S=Astro.sign,VS="︎";
@@ -441,12 +446,21 @@ function placeName(d){const a=d.address||{},kr=a.country_code==="kr"||!a.country
 function reverse(lat,lon){const my=++revT;
   fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=14&accept-language=ko&lat=${lat}&lon=${lon}`).then(r=>r.json()).then(d=>{if(my!==revT||!d)return;
     temp.name=placeName(d)||"지도에서 고른 곳";$('mPick').textContent=temp.name}).catch(()=>{if(my===revT)$('mPick').textContent=temp.name})}
+let kPlaces=null;
+if(KAKAO_JS_KEY){const k=document.createElement('script');k.src=`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_JS_KEY}&libraries=services&autoload=false`;
+  k.onload=()=>{try{kakao.maps.load(()=>{kPlaces=new kakao.maps.services.Places()})}catch(e){}};document.head.appendChild(k)}
+function showRes(list){window._sr=list;$('sres').innerHTML=list.map((x,i)=>`<button type="button" onclick="useRes(${i})">📍 <b style="color:var(--gold2);font-weight:500">${esc(x.title)}</b>${x.sub?`<br><small style="color:var(--muted)">${esc(x.sub)}</small>`:""}</button>`).join("")}
+function osmSearch(q){fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&addressdetails=1&accept-language=ko&q=${encodeURIComponent(q)}`).then(r=>r.json()).then(list=>{
+    if(!list||!list.length){$('sres').innerHTML='<p class="hint">검색 결과가 없어요. 동 이름(예: 고양시 중산동)으로 검색하거나 지도를 직접 움직여 주세요.</p>';return}
+    showRes(list.map(x=>{const parts=x.display_name.split(", ");return{lat:+x.lat,lon:+x.lon,title:x.name||parts[0],sub:parts.slice(1,5).reverse().join(" "),name:placeName(x)}}))
+  }).catch(()=>{$('sres').innerHTML='<p class="hint">검색에 실패했어요. 지도를 직접 움직여 주세요.</p>'})}
 function searchPlace(){const q=($('placeQ').value||"").trim();if(!q)return;$('sres').innerHTML='<p class="hint">찾는 중…</p>';
-  fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&addressdetails=1&accept-language=ko&q=${encodeURIComponent(q)}`).then(r=>r.json()).then(list=>{
-    if(!list||!list.length){$('sres').innerHTML='<p class="hint">검색 결과가 없어요. 지도를 직접 눌러 주세요.</p>';return}
-    window._sr=list;$('sres').innerHTML=list.map((x,i)=>`<button type="button" onclick="useRes(${i})">📍 ${esc(x.display_name)}</button>`).join("")
-  }).catch(()=>{$('sres').innerHTML='<p class="hint">검색에 실패했어요. 지도를 직접 눌러 주세요.</p>'})}
-function useRes(i){const x=window._sr[i];temp={lat:+x.lat,lon:+x.lon,name:placeName(x)};$('mPick').textContent=temp.name;$('sres').innerHTML="";
+  if(kPlaces){kPlaces.keywordSearch(q,(data,status)=>{
+      if(status===kakao.maps.services.Status.OK&&data.length){showRes(data.slice(0,8).map(d=>{const addr=d.road_address_name||d.address_name||"",area=(d.address_name||addr).split(" ").filter(t=>!/^\d|^산\d/.test(t)).slice(0,4).join(" ");
+        return{lat:+d.y,lon:+d.x,title:d.place_name,sub:addr,name:area?`${d.place_name} (${area})`:d.place_name}}))}
+      else osmSearch(q)},{size:8});return}
+  osmSearch(q)}
+function useRes(i){const x=window._sr[i];temp={lat:x.lat,lon:x.lon,name:x.name};$('mPick').textContent=temp.name;$('sres').innerHTML="";
   if(map){skipRev=true;map.setView([temp.lat,temp.lon],13)}}
 
 /* ===== 프로필 ===== */
