@@ -15,7 +15,7 @@
 <meta name="theme-color" content="#2b2f78">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+Symbols&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css">
 <style>
 :root{
   --bg:#2b2f78; --bg2:#34478f; --card:rgba(78,94,180,.5); --card2:rgba(52,58,140,.6);
@@ -336,7 +336,7 @@ details.gift{margin:4px 0 14px;border-top:1px solid rgba(236,217,162,.25);paddin
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="vendor/leaflet/leaflet.js"></script>
 <script src="calc.js"></script>
 <script src="data.js"></script>
 <script src="data2.js"></script>
@@ -423,7 +423,13 @@ let temp=null,revT=0,revTimer=0,skipRev=false;
 function openMap(){temp={lat:place.lat,lon:place.lon,name:place.name};$('mPick').textContent=temp.name;$('sres').innerHTML="";$('placeQ').value="";$('mapModal').classList.add('on');document.body.style.overflow="hidden";
   if(!window.L){$('map').innerHTML='<p class="hint" style="padding:20px;color:#333">지도를 불러오지 못했어요. 위의 검색창이나 이전 화면의 도시 선택을 이용해 주세요.</p>';return}
   if(!map){map=L.map('map',{zoomControl:true,attributionControl:true});
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
+    const TILES=[['https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}],
+      ['https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd',attribution:'© OpenStreetMap © CARTO'}],
+      ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles © Esri'}]];
+    let ti=0,ok=0,bad=0,layer=null;
+    const useTile=k=>{if(layer)map.removeLayer(layer);ok=0;bad=0;layer=L.tileLayer(TILES[k][0],TILES[k][1]).addTo(map);
+      layer.on('tileload',()=>ok++);layer.on('tileerror',()=>{bad++;if(!ok&&bad>=3&&ti<TILES.length-1){ti++;useTile(ti)}})};
+    useTile(0);
     map.on('movestart',()=>{$('sres').innerHTML=""});
     map.on('moveend',()=>{if(skipRev){skipRev=false;return}const c=map.getCenter();temp.lat=c.lat;temp.lon=c.lng;temp.name="지도에서 고른 곳";$('mPick').textContent="위치 확인 중…";clearTimeout(revTimer);revTimer=setTimeout(()=>reverse(c.lat,c.lng),650)})}
   skipRev=true;map.setView([place.lat,place.lon],inKorea(place.lat,place.lon)&&place.name!=="서울"?12:7,{animate:false});setTimeout(()=>map.invalidateSize(),80)}
