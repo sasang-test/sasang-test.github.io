@@ -3,242 +3,268 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>별자리 풀이 — 내 출생 차트와 오늘의 운세</title>
-<meta name="description" content="생년월일과 태어난 시간으로 보는 서양 점성술. 태양·달·상승궁, 출생 차트, 오늘의 운세, 신년운세, 별자리 궁합까지.">
+<title>아스트롤로지아 — 별이 기록한 당신의 이야기</title>
+<meta name="description" content="태어난 날짜·시간·장소로 보는 서양 점성술. 출생 차트, 오늘의 운세, 달·상승궁, 연애운·이상형, 결혼운, 신년운세, 별자리 궁합.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://sasang-test.github.io/astro/">
-<meta property="og:title" content="별자리 풀이 — 별이 말해주는 나의 이야기">
-<meta property="og:description" content="태양·달·상승궁, 출생 차트, 오늘의 운세, 신년운세, 별자리 궁합">
-<meta name="theme-color" content="#0f0d1f">
+<meta property="og:title" content="아스트롤로지아 — 별이 기록한 당신의 이야기">
+<meta property="og:description" content="출생 차트 · 오늘의 운세 · 연애운 · 결혼운 · 신년운세 · 별자리 궁합">
+<meta name="theme-color" content="#070b1f">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+Symbols&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
 :root{
-  --ink:#0f0d1f; --ink2:#1c1834; --ink3:#2a2450; --gold:#d6a84f; --gold2:#f1d18a; --paper:#f5efe3; --paper2:#e9e0cf;
-  --text:#2b2320; --muted:#7a6d62; --violet:#8f7bd8; --red:#b8322a;
-  --fire:#d9653b; --earth:#5f8a43; --air:#c9a227; --water:#3f78b5;
+  --bg:#070b1f; --bg2:#0c1330; --card:rgba(17,25,62,.82); --card2:rgba(10,16,44,.9);
+  --gold:#c9a961; --gold2:#ecd9a2; --gold3:#8a7240; --line:rgba(201,169,97,.42);
+  --text:#e8e4f3; --soft:#c3c4dc; --muted:#8e94b8; --accent:#9fa9ea; --rose:#d98ba0; --red:#e07a6e;
+  --fire:#e0774c; --earth:#7fae5f; --air:#e2c35a; --water:#5f9ad8;
+  --serif:'Noto Serif KR',serif; --latin:'Cinzel',serif; --sym:'Noto Sans Symbols','Noto Sans Symbols 2','Segoe UI Symbol','Apple Symbols',serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{background:var(--ink);color:var(--text);font-family:'Gowun Dodum',sans-serif;-webkit-font-smoothing:antialiased}
-body{min-height:100vh;background:radial-gradient(ellipse at 50% -10%,#2f2660 0%,transparent 60%),radial-gradient(circle at 90% 85%,#2a1838 0%,transparent 40%),var(--ink)}
-.stars{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(1px 1px at 20% 30%,#fff8 50%,transparent 51%),radial-gradient(1px 1px at 70% 20%,#fff6 50%,transparent 51%),radial-gradient(1.5px 1.5px at 40% 70%,#fff7 50%,transparent 51%),radial-gradient(1px 1px at 85% 60%,#fff5 50%,transparent 51%),radial-gradient(1px 1px at 10% 85%,#fff6 50%,transparent 51%),radial-gradient(1.5px 1.5px at 60% 45%,#fff4 50%,transparent 51%),radial-gradient(1px 1px at 30% 10%,#fff7 50%,transparent 51%),radial-gradient(1px 1px at 92% 92%,#fff5 50%,transparent 51%)}
-.wrap{position:relative;z-index:1;max-width:460px;margin:0 auto;padding:20px 16px 60px;min-height:100vh}
+html,body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100vh;background:radial-gradient(ellipse 120% 60% at 50% -5%,#1c2a6b 0%,transparent 60%),radial-gradient(circle at 100% 70%,#2a1747 0%,transparent 35%),radial-gradient(circle at 0% 100%,#0e2547 0%,transparent 40%),var(--bg)}
+.sky{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:
+ radial-gradient(1px 1px at 12% 18%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 78% 12%,#fffc 50%,transparent 51%),radial-gradient(1.6px 1.6px at 42% 64%,#fff9 50%,transparent 51%),radial-gradient(1px 1px at 88% 52%,#fffb 50%,transparent 51%),radial-gradient(1px 1px at 8% 82%,#fff9 50%,transparent 51%),radial-gradient(1.4px 1.4px at 62% 38%,#fff8 50%,transparent 51%),radial-gradient(1px 1px at 28% 8%,#fffa 50%,transparent 51%),radial-gradient(1px 1px at 95% 92%,#fff8 50%,transparent 51%),radial-gradient(1px 1px at 52% 88%,#fff7 50%,transparent 51%),radial-gradient(1.2px 1.2px at 70% 76%,#fff9 50%,transparent 51%),radial-gradient(1px 1px at 20% 45%,#fff6 50%,transparent 51%);opacity:.75}
+.wrap{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:22px 16px 64px;min-height:100vh}
 .screen{display:none;animation:fade .5s ease}
 .screen.on{display:block}
-@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 button,input,select{font-family:inherit;touch-action:manipulation}
-.g{font-family:'Segoe UI Symbol','Apple Symbols','Noto Sans Symbols',serif}
+.sym{font-family:var(--sym);font-variant-emoji:text}
+a{color:var(--gold2)}
 
-.top-badge{display:inline-block;border:1px solid var(--gold);color:var(--gold2);font-size:12px;padding:4px 12px;border-radius:20px;letter-spacing:.12em}
-.hero{text-align:center;color:var(--paper);padding-top:14px}
-.hero h1{font-family:'Nanum Myeongjo',serif;font-weight:800;font-size:32px;line-height:1.3;margin:16px 0 10px}
+.orn{display:flex;align-items:center;gap:10px;color:var(--gold);justify-content:center;margin:22px 0 6px;font-size:12px;letter-spacing:.3em;font-family:var(--latin)}
+.orn::before,.orn::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent)}
+
+.hero{text-align:center;padding-top:6px}
+.hero .kicker{font-family:var(--latin);font-size:12px;letter-spacing:.42em;color:var(--gold)}
+.hero h1{font-family:var(--serif);font-weight:700;font-size:28px;line-height:1.45;margin:12px 0 8px;color:#f4efe0}
 .hero h1 em{font-style:normal;color:var(--gold2)}
-.hero p.sub{color:#c9bfd8;font-size:15px;line-height:1.7}
-.emblem{position:relative;width:230px;height:230px;margin:22px auto 18px}
-.emblem svg{position:absolute;inset:0;width:100%;height:100%}
-.emblem .spin{animation:spin 80s linear infinite;transform-origin:50% 50%}
+.hero .sub{color:var(--soft);font-size:14.5px;line-height:1.75}
+.hero .motto{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:16px;margin-top:6px}
+.sphere{width:250px;height:250px;margin:16px auto 6px;display:block}
+.sphere .rot{animation:spin 120s linear infinite;transform-origin:125px 125px}
+.sphere .rot2{animation:spin 200s linear infinite reverse;transform-origin:125px 125px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.emblem .core{position:absolute;inset:72px;border-radius:50%;background:radial-gradient(circle,#3a2f6a,#17132c);border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;flex-direction:column;box-shadow:0 0 40px rgba(214,168,79,.3)}
-.emblem .core b{font-family:'Nanum Myeongjo',serif;font-size:26px;color:var(--gold2)}
-.emblem .core span{font-size:10px;color:#b8acd0;letter-spacing:.2em;margin-top:2px}
 
-.card{background:var(--paper);border-radius:18px;padding:20px 18px;margin-top:14px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
-.card h3{font-family:'Nanum Myeongjo',serif;font-size:18px;color:#2a1f3d;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card{position:relative;background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--line);border-radius:4px;padding:22px 18px;margin-top:14px;box-shadow:0 12px 34px rgba(0,0,0,.4),inset 0 0 0 4px rgba(7,11,31,.6),inset 0 0 0 5px rgba(201,169,97,.16)}
+.card::before,.card::after{content:"✦";position:absolute;top:7px;color:var(--gold);font-size:9px;opacity:.8}
+.card::before{left:9px}.card::after{right:9px}
+.card h3{font-family:var(--serif);font-weight:700;font-size:18px;color:var(--gold2);margin-bottom:12px;display:flex;align-items:center;gap:8px;line-height:1.4}
 .card h3 .tag{margin-left:auto}
-.card p{font-size:15px;line-height:1.75;color:var(--text)}
-label.l{display:block;font-size:13px;color:var(--muted);margin:12px 0 6px}
+.card p{font-size:15px;line-height:1.85;color:var(--text)}
+.card p+p{margin-top:10px}
+.lead{font-size:15.5px!important;color:#f1ecdc!important}
+
+label.l{display:block;font-size:13px;color:var(--gold);margin:16px 0 7px;letter-spacing:.04em}
 label.l:first-of-type{margin-top:0}
-input[type=text],input[type=date],input[type=time],select{width:100%;padding:13px 12px;border:1.5px solid #d6cbb6;border-radius:12px;font-size:16px;background:#fffdf8;color:var(--text);-webkit-appearance:none;appearance:none;min-height:50px}
-input:focus,select:focus{outline:none;border-color:var(--gold)}
-.row{display:flex;gap:8px;align-items:center}
-.row>*{flex:1}
-.chk{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--muted);margin-top:8px;cursor:pointer}
-.chk input{width:18px;height:18px;accent-color:#5a47a8}
-.hint{font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:6px}
+input[type=text],input[type=date],input[type=time],select{width:100%;padding:12px 13px;border:1px solid rgba(201,169,97,.45);border-radius:3px;font-size:16px;background:rgba(5,9,28,.75);color:var(--text);-webkit-appearance:none;appearance:none;min-height:48px;color-scheme:dark}
+input:focus,select:focus{outline:none;border-color:var(--gold2);box-shadow:0 0 0 3px rgba(201,169,97,.18)}
+input:disabled{opacity:.45}
+.chk{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--soft);margin-top:9px;cursor:pointer}
+.chk input{width:18px;height:18px;accent-color:#c9a961}
+.hint{font-size:12.5px;color:var(--muted);line-height:1.65;margin-top:7px}
 .err{color:var(--red);font-size:13px;min-height:18px;margin-top:6px}
+.srow{display:flex;gap:6px}
+.srow input{flex:1;min-width:0}
+.srow button{flex-shrink:0;border:1px solid var(--gold);background:rgba(201,169,97,.15);color:var(--gold2);border-radius:3px;padding:0 14px;font-size:14px;cursor:pointer}
+#map{height:240px;border:1px solid var(--line);border-radius:3px;margin-top:8px;background:#0b1029}
+.leaflet-container{font-family:inherit}
+.place{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:14px;color:var(--gold2);flex-wrap:wrap}
+.place small{color:var(--muted)}
+.sres button{display:block;width:100%;text-align:left;background:rgba(5,9,28,.8);border:1px solid rgba(201,169,97,.25);color:var(--soft);padding:9px 11px;font-size:13.5px;border-radius:3px;margin-top:4px;cursor:pointer;line-height:1.4}
 
-.btn{display:block;width:100%;border:0;border-radius:14px;padding:16px;font-size:17px;font-weight:700;cursor:pointer;background:linear-gradient(180deg,#f1d18a,#d6a84f);color:#2a1a05;box-shadow:0 5px 0 #9c7731;margin-top:14px;transition:transform .1s}
-.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #9c7731}
-.btn.dark{background:var(--ink3);color:var(--paper);box-shadow:0 5px 0 #15112b}
-.btn.ghost{background:transparent;color:var(--gold2);border:1.5px solid rgba(214,168,79,.6);box-shadow:none}
-.btn.kakao{background:#fee500;color:#191600;box-shadow:0 5px 0 #b8a500}
-.btn:disabled{opacity:.6}
-.mt10{margin-top:10px}
+.btn{display:block;width:100%;border:1px solid #e9d39a;border-radius:3px;padding:15px;font-size:16.5px;font-weight:700;cursor:pointer;background:linear-gradient(180deg,#e7cf8f,#b8954b);color:#1a1405;box-shadow:0 0 0 3px rgba(201,169,97,.18),0 8px 22px rgba(201,169,97,.18);margin-top:16px;letter-spacing:.02em;text-align:center;text-decoration:none}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{background:transparent;color:var(--gold2);border:1px solid var(--line);box-shadow:none;font-weight:500;font-size:15px}
+.btn.kakao{background:#fee500;color:#191600;border-color:#fee500;box-shadow:none}
+.mt8{margin-top:8px}
 
-.menu{margin-top:22px}
-.menu .it{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.06);border:1px solid rgba(214,168,79,.25);border-radius:14px;padding:13px 14px;margin-top:8px;color:var(--paper)}
-.menu .it .ic{font-size:22px;width:30px;text-align:center}
-.menu .it b{display:block;font-size:15px}
-.menu .it small{color:#b8acd0;font-size:12.5px}
-.menu .it .tag{margin-left:auto;flex-shrink:0}
-.tag{font-size:11.5px;padding:3px 9px;border-radius:20px;font-weight:700;white-space:nowrap}
-.tag.free{background:#e6f1df;color:#3b6a25}
-.tag.pay{background:#2a2450;color:var(--gold2);border:1px solid var(--gold)}
+.prof{display:flex;align-items:center;gap:12px}
+.prof .av{width:48px;height:48px;border-radius:50%;border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--gold2);flex-shrink:0;background:radial-gradient(circle,#1d2a66,#0b1030)}
+.prof b{font-family:var(--serif);font-size:16.5px;color:#f4efe0}
+.prof small{display:block;color:var(--muted);font-size:12.5px;line-height:1.55;margin-top:2px}
+.prof button{margin-left:auto;flex-shrink:0;border:1px solid var(--line);background:transparent;color:var(--gold2);border-radius:3px;padding:8px 12px;font-size:13px;cursor:pointer}
 
-.loader{text-align:center;color:var(--paper);padding-top:120px}
-.loader .orb{width:120px;height:120px;margin:0 auto 26px;border-radius:50%;border:2px solid rgba(214,168,79,.3);border-top-color:var(--gold2);animation:spin 1.1s linear infinite}
-.loader p{font-size:16px;color:#c9bfd8;line-height:1.8}
+.deck{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+.tc{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;background:linear-gradient(180deg,#141d4c,#0a1033);border:1px solid var(--line);border-radius:6px;padding:14px 10px 13px;cursor:pointer;color:var(--text);box-shadow:inset 0 0 0 4px #0a1033,inset 0 0 0 5px rgba(201,169,97,.3),0 10px 24px rgba(0,0,0,.35);transition:transform .15s,box-shadow .15s;font:inherit}
+.tc:hover,.tc:focus-visible{transform:translateY(-2px);box-shadow:inset 0 0 0 4px #0a1033,inset 0 0 0 5px rgba(236,217,162,.6),0 14px 30px rgba(0,0,0,.45);outline:none}
+.tc .rn{font-family:var(--latin);font-size:12px;color:var(--gold);letter-spacing:.2em}
+.tc .halo{width:66px;height:66px;margin:10px 0 9px;border-radius:50%;border:1px solid rgba(201,169,97,.5);display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,rgba(201,169,97,.2),transparent 70%);position:relative}
+.tc .halo::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px dashed rgba(201,169,97,.28)}
+.tc .halo span{font-size:31px;color:var(--gold2);line-height:1}
+.tc b{font-family:var(--serif);font-size:15px;color:#f4efe0;line-height:1.35}
+.tc .en{font-family:var(--latin);font-size:10px;letter-spacing:.2em;color:var(--muted);margin-top:3px}
+.tc small{font-size:12px;color:var(--soft);margin-top:6px;line-height:1.45}
+.tc .tag{margin-top:auto;position:relative;top:6px}
+.tc small{margin-bottom:12px}
+.tag{font-size:11.5px;padding:3px 10px;border-radius:2px;font-weight:700;white-space:nowrap;letter-spacing:.03em}
+.tag.free{background:rgba(127,174,95,.16);color:#a8d48b;border:1px solid rgba(127,174,95,.45)}
+.tag.pay{background:rgba(201,169,97,.14);color:var(--gold2);border:1px solid var(--gold)}
+.tag.open{background:rgba(159,169,234,.15);color:#c3cbff;border:1px solid rgba(159,169,234,.5)}
 
-.rhead{text-align:center;color:var(--paper);padding-top:6px}
-.rhead .big{font-size:64px;line-height:1;color:var(--gold2);text-shadow:0 0 30px rgba(241,209,138,.5)}
-.rhead h2{font-family:'Nanum Myeongjo',serif;font-size:25px;margin:10px 0 4px}
-.rhead h2 em{font-style:normal;color:var(--gold2)}
-.rhead .kw{color:#c9bfd8;font-size:14px}
-.big3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
-.big3 div{background:rgba(255,255,255,.07);border:1px solid rgba(214,168,79,.3);border-radius:12px;padding:10px 4px;text-align:center;color:var(--paper)}
-.big3 small{display:block;font-size:11.5px;color:#b8acd0}
-.big3 b{display:block;font-size:15px;margin-top:3px}
-.big3 .g{font-size:20px;color:var(--gold2)}
+.loader{text-align:center;padding-top:120px}
+.loader svg{width:140px;height:140px;animation:spin 2.4s linear infinite}
+.loader p{font-family:var(--serif);font-size:16px;color:var(--soft);line-height:1.8;margin-top:24px}
 
-.tabs{position:sticky;top:0;z-index:5;display:flex;gap:4px;margin:18px -16px 0;padding:10px 16px;background:rgba(15,13,31,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
-.tabs button{flex:1;border:1px solid rgba(214,168,79,.3);background:transparent;color:#c9bfd8;border-radius:10px;padding:10px 2px;font-size:14px;cursor:pointer}
-.tabs button.on{background:var(--gold);color:#2a1a05;border-color:var(--gold);font-weight:700}
-.pane{display:none}
-.pane.on{display:block;animation:fade .35s ease}
+.vbar{position:sticky;top:0;z-index:1000;display:flex;align-items:center;gap:8px;margin:-22px -16px 0;padding:12px 16px;background:rgba(7,11,31,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid rgba(201,169,97,.2)}
+.vbar button{border:1px solid var(--line);background:transparent;color:var(--gold2);border-radius:3px;padding:7px 11px;font-size:13.5px;cursor:pointer;flex-shrink:0}
+.vbar .tt{flex:1;text-align:center;line-height:1.25;min-width:0}
+.vbar .tt small{display:block;font-family:var(--latin);font-size:10px;letter-spacing:.25em;color:var(--gold)}
+.vbar .tt b{font-family:var(--serif);font-size:16px;color:#f4efe0}
+.vbar .sp{width:62px;flex-shrink:0}
+.vhead{text-align:center;padding:26px 0 4px}
+.vhead .glyph{font-size:58px;color:var(--gold2);text-shadow:0 0 28px rgba(236,217,162,.45);line-height:1}
+.vhead h2{font-family:var(--serif);font-size:23px;margin:12px 0 5px;color:#f4efe0;line-height:1.4}
+.vhead h2 em{font-style:normal;color:var(--gold2)}
+.vhead .kw{color:var(--soft);font-size:14px;line-height:1.6}
 
 .wheel{display:block;width:100%;max-width:360px;margin:0 auto}
-.plist{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.plist div{font-size:13px;white-space:nowrap;background:#fffdf8;border:1px solid #e3d8c4;border-radius:10px;padding:8px 10px;display:flex;gap:6px;align-items:center}
-.plist .g{color:#5a47a8;font-size:16px;width:18px;text-align:center}
-.plist span{margin-left:auto;color:var(--muted);font-size:12px}
-.bars .b{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:14px}
-.bars .b>span:first-child{width:62px}
-.bars .track{flex:1;height:12px;border-radius:6px;background:#e7ddca;overflow:hidden}
-.bars .fill{height:100%;border-radius:6px}
+.plist{margin-top:14px}
+.plist div{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid rgba(201,169,97,.15);font-size:14.5px}
+.plist div:last-child{border-bottom:0}
+.plist .sym{color:var(--gold2);font-size:18px;width:22px;text-align:center;flex-shrink:0}
+.plist em{font-style:normal;color:var(--muted);font-size:12.5px;margin-left:auto;text-align:right}
+.bars .b{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:14px}
+.bars .b>span:first-child{width:64px}
+.bars .track{flex:1;height:10px;border-radius:5px;background:rgba(255,255,255,.08);overflow:hidden}
+.bars .fill{height:100%;border-radius:5px}
 .bars .b>span:last-child{width:22px;text-align:right;color:var(--muted)}
-.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:14.5px;margin-top:12px;line-height:1.6}
-.kv dt{color:var(--muted)}
-.sec{margin-top:16px}
-.sec h4{font-size:15.5px;color:#3d2f63;margin-bottom:4px;display:flex;align-items:center;gap:6px}
-.sec h4 .g{color:#5a47a8;font-size:18px}
-.sec h4 small{color:var(--muted);font-weight:400;font-size:12.5px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;font-size:14.5px;margin-top:14px;line-height:1.6}
+.kv dt{color:var(--gold)}
+.sec{margin-top:20px}
+.sec:first-child{margin-top:0}
+.sec h4{font-family:var(--serif);font-size:16px;color:var(--gold2);margin-bottom:7px;display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;line-height:1.45}
+.sec h4 .sym{font-size:18px}
+.sec h4 small{color:var(--muted);font-weight:400;font-size:12.5px;font-family:'Noto Sans KR',sans-serif}
+.sec p{font-size:15px;line-height:1.85}
+.quote{border-left:2px solid var(--gold);padding:10px 14px;margin-top:14px;background:rgba(201,169,97,.07);font-size:14.5px;line-height:1.8;color:#f1ecdc}
+.sec .quote{margin:0 0 10px}
 
-.daysel{display:flex;gap:6px;margin-bottom:12px}
-.daysel button{flex:1;border:1.5px solid #d6cbb6;background:#fffdf8;border-radius:10px;padding:9px;font-size:14px;cursor:pointer;color:var(--text)}
-.daysel button.on{border-color:#5a47a8;background:#5a47a8;color:#fff}
-.score{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed #d6cbb6;font-size:15px}
-.score:last-of-type{border-bottom:0}
-.stars-s{color:#d6a84f;letter-spacing:2px;font-size:16px}
-.lucky{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
-.lucky div{background:#2a2450;color:var(--paper);border-radius:12px;padding:10px 6px;text-align:center;font-size:14px}
-.lucky small{display:block;color:#b8acd0;font-size:11.5px;margin-bottom:3px}
+.daysel{display:flex;gap:6px;margin-bottom:16px}
+.daysel button{flex:1;border:1px solid var(--line);background:transparent;border-radius:3px;padding:9px;font-size:14px;cursor:pointer;color:var(--soft)}
+.daysel button.on{background:var(--gold);color:#1a1405;border-color:var(--gold);font-weight:700}
+.score{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid rgba(201,169,97,.15);font-size:15px}
+.score:last-child{border-bottom:0}
+.st{color:var(--gold2);letter-spacing:2px;font-size:15px}
+.lucky{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+.lucky div{border:1px solid var(--line);border-radius:3px;padding:11px 6px;text-align:center;font-size:14px;background:rgba(5,9,28,.5)}
+.lucky small{display:block;color:var(--gold);font-size:11.5px;margin-bottom:4px}
 
-.mon{display:grid;grid-template-columns:44px 1fr;gap:4px 10px;padding:10px 0;border-bottom:1px dashed #d6cbb6;font-size:14px;line-height:1.55}
+.mon{padding:14px 0;border-bottom:1px solid rgba(201,169,97,.15)}
 .mon:last-child{border-bottom:0}
-.mon b{font-size:15px;color:#3d2f63;grid-row:span 3}
-.mon .stars-s{font-size:13px}
+.mon .mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.mon .mh b{font-family:var(--serif);font-size:16px;color:var(--gold2)}
+.mon p{font-size:14.5px!important;line-height:1.8!important}
+.mon p+p{margin-top:6px!important}
+.yrs>div{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid rgba(201,169,97,.15);align-items:flex-start}
+.yrs>div:last-child{border-bottom:0}
+.yrs b{font-family:var(--latin);font-size:16px;color:var(--gold2);flex-shrink:0;width:48px}
+.yrs p{font-size:14.5px!important;line-height:1.75!important}
+.match{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+.match div{text-align:center;border:1px solid var(--line);border-radius:3px;padding:12px 6px;background:rgba(5,9,28,.5)}
+.match .sym{display:block;font-size:26px;color:var(--gold2)}
+.match b{display:block;font-size:14px;margin-top:4px}
+.match small{display:block;color:var(--muted);font-size:11.5px;margin-top:3px;line-height:1.4}
 
-.cscore{text-align:center;padding:6px 0 10px}
-.cscore .n{font-family:'Nanum Myeongjo',serif;font-size:46px;font-weight:800;color:#5a47a8}
-.cscore .n small{font-size:18px}
-.cscore .t{font-size:15px;color:#3d2f63;margin-top:2px}
-.pair{display:flex;justify-content:center;align-items:center;gap:14px;margin:6px 0 12px;font-size:15px}
-.pair .g{font-size:28px;color:#5a47a8}
+.cscore{text-align:center;padding:4px 0 12px}
+.cscore .n{font-family:var(--latin);font-size:48px;font-weight:700;color:var(--gold2)}
+.cscore .n small{font-size:18px;font-family:var(--serif)}
+.cscore .t{font-size:14.5px;color:var(--soft);margin-top:2px}
+.pair{display:flex;justify-content:center;align-items:center;gap:18px;margin:4px 0 10px;font-size:14.5px;text-align:center}
+.pair .sym{font-size:30px;color:var(--gold2)}
 
-.lockwrap{position:relative;margin-top:14px;border-radius:14px;overflow:hidden}
-.lockwrap .blur{filter:blur(6px);user-select:none;pointer-events:none;opacity:.75}
-.lockcover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:linear-gradient(180deg,rgba(245,239,227,.35),rgba(245,239,227,.9));padding:16px;text-align:center}
-.lockcover .lk{font-size:14.5px;color:#3d2f63;font-weight:700;line-height:1.5}
-.lockbtn{border:0;border-radius:12px;padding:12px 22px;font-size:15.5px;font-weight:700;background:#2a2450;color:var(--gold2);cursor:pointer;box-shadow:0 4px 0 #15112b}
+.lockwrap{position:relative;margin-top:4px;border-radius:3px;overflow:hidden;min-height:220px}
+.lockwrap .blur{filter:blur(7px);user-select:none;pointer-events:none;opacity:.55;max-height:520px;overflow:hidden}
+.lockcover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:linear-gradient(180deg,rgba(10,16,44,.35),rgba(10,16,44,.92) 45%);padding:18px;text-align:center}
+.lockcover .lk{font-family:var(--serif);font-size:15px;color:var(--gold2);line-height:1.6}
+.lockcover .lk small{display:block;font-family:'Noto Sans KR';font-size:12.5px;color:var(--soft);margin-top:4px}
+.lockbtn{border:1px solid #e9d39a;border-radius:3px;padding:12px 22px;font-size:15.5px;font-weight:700;background:linear-gradient(180deg,#e7cf8f,#b8954b);color:#1a1405;cursor:pointer}
+.incl{list-style:none;margin-top:6px}
+.incl li{font-size:14.5px;line-height:1.7;padding:5px 0 5px 22px;position:relative;color:var(--soft)}
+.incl li::before{content:"✦";position:absolute;left:2px;color:var(--gold);font-size:11px;top:8px}
 
-.promo{background:linear-gradient(135deg,#2a2450,#3d2f63);color:var(--paper);border:1px solid var(--gold);border-radius:16px;padding:18px;margin-top:14px}
-.promo b{color:var(--gold2);font-size:17px;font-family:'Nanum Myeongjo',serif}
-.promo ul{list-style:none;margin:10px 0 2px;font-size:14px;line-height:1.9;color:#ddd3ee}
-.promo .price{font-size:13px;color:#b8acd0;margin-top:6px}
-.promo .price s{margin-right:6px}
-.promo .price b{font-size:20px}
+.mini{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
+.mini button{border:1px solid var(--line);background:rgba(10,16,44,.7);color:var(--soft);border-radius:4px;padding:10px 2px 8px;font-size:11.5px;cursor:pointer;line-height:1.35}
+.mini button .sym{display:block;font-size:20px;color:var(--gold2);margin-bottom:3px}
+.mini button.cur{border-color:var(--gold);color:var(--gold2)}
+.foot{text-align:center;color:var(--muted);font-size:12px;line-height:1.75;margin-top:28px}
 
-.foot{text-align:center;color:#8a80a3;font-size:12px;line-height:1.7;margin-top:28px}
-.foot a{color:#b8acd0}
-
-.modal{position:fixed;inset:0;background:rgba(5,4,12,.7);display:none;align-items:flex-end;justify-content:center;z-index:50}
+.modal{position:fixed;inset:0;background:rgba(3,5,15,.75);display:none;align-items:flex-end;justify-content:center;z-index:2000}
 .modal.on{display:flex}
-.sheet{position:relative;background:var(--paper);width:100%;max-width:460px;border-radius:20px 20px 0 0;padding:24px 20px 28px;max-height:92vh;overflow:auto;animation:up .3s ease}
+.sheet{position:relative;background:linear-gradient(180deg,#141d4c,#0a1033);border-top:1px solid var(--gold);width:100%;max-width:480px;border-radius:12px 12px 0 0;padding:26px 20px 30px;max-height:92vh;overflow:auto;animation:up .3s ease}
 @keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
 .closex{position:absolute;top:12px;right:12px;border:0;background:transparent;font-size:20px;color:var(--muted);cursor:pointer;padding:6px}
-.title-s{font-family:'Nanum Myeongjo',serif;font-size:20px;font-weight:800;color:#2a1f3d}
-.desc-s{font-size:14px;color:var(--muted);margin:6px 0 16px;line-height:1.6}
-.step{display:flex;gap:10px;margin-bottom:16px}
-.step .n{flex-shrink:0;width:24px;height:24px;border-radius:50%;background:#2a2450;color:var(--gold2);font-size:13px;display:flex;align-items:center;justify-content:center;font-weight:700}
-.step .c{flex:1;font-size:14px;line-height:1.65}
-.order{font-weight:700;color:#5a47a8}
-.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);background:#2a2450;color:var(--paper);padding:12px 18px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:.3s;z-index:60;max-width:90vw;text-align:center}
+.title-s{font-family:var(--serif);font-size:19px;font-weight:700;color:var(--gold2)}
+.desc-s{font-size:14px;color:var(--soft);margin:8px 0 18px;line-height:1.65}
+.step{display:flex;gap:10px;margin-bottom:18px}
+.step .n{flex-shrink:0;width:24px;height:24px;border-radius:50%;border:1px solid var(--gold);color:var(--gold2);font-size:13px;display:flex;align-items:center;justify-content:center;font-family:var(--latin)}
+.step .c{flex:1;font-size:14px;line-height:1.7}
+.order{font-weight:700;color:var(--gold2)}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);background:#141d4c;border:1px solid var(--gold);color:var(--text);padding:12px 18px;border-radius:4px;font-size:14px;opacity:0;pointer-events:none;transition:.3s;z-index:2100;max-width:90vw;text-align:center}
 .toast.on{opacity:1;transform:translateX(-50%)}
 </style>
 </head>
 <body>
-<div class="stars"></div>
+<div class="sky"></div>
 <div class="wrap">
 
-<!-- 홈 -->
 <section class="screen on" id="s-home">
   <div class="hero">
-    <span class="top-badge">WESTERN ASTROLOGY</span>
-    <h1>별이 말해주는<br><em>나의 이야기</em></h1>
-    <p class="sub">태어난 순간 하늘의 별 위치로 읽는<br>성격 · 연애 · 오늘의 운세 · 궁합</p>
-    <div class="emblem" id="emblem"></div>
+    <div class="kicker">ASTROLOGIA</div>
+    <svg class="sphere" id="sphere" viewBox="0 0 250 250" aria-hidden="true"></svg>
+    <h1>별이 기록한<br><em>당신의 이야기</em></h1>
+    <p class="sub">태어난 날짜와 시간, 그리고 장소.<br>그 순간 하늘에 새겨진 별의 지도를 읽어 드려요.</p>
+    <p class="motto">As above, so below</p>
   </div>
 
-  <div class="card">
-    <h3>🌙 출생 정보 입력</h3>
-    <label class="l" for="nmIn">이름 (닉네임)</label>
+  <div class="card" id="profCard" style="display:none"></div>
+  <div class="card" id="formCard">
+    <h3><span class="sym">✦</span> 출생 정보</h3>
+    <label class="l" for="nmIn">이름 또는 닉네임</label>
     <input type="text" id="nmIn" maxlength="10" placeholder="예: 별빛" autocomplete="off">
     <label class="l" for="bdIn">생년월일 (양력)</label>
     <input type="date" id="bdIn" min="1920-01-01" max="2049-12-31" value="1995-01-01">
     <label class="l" for="btIn">태어난 시간</label>
     <input type="time" id="btIn" value="12:00">
     <label class="chk"><input type="checkbox" id="noTime" onchange="$('btIn').disabled=this.checked"> 태어난 시간을 몰라요</label>
-    <label class="l" for="cityIn">태어난 곳</label>
-    <select id="cityIn"></select>
-    <p class="hint">시간을 알면 상승궁(첫인상)과 하우스까지 정확하게 볼 수 있어요. 서머타임 시기(1948~60, 1987~88년) 출생도 자동 보정해요.</p>
-    <div class="err" id="inErr"></div>
-    <button class="btn" onclick="start()">✨ 내 별자리 풀이 보기</button>
-    <button class="btn ghost mt10" id="savedBtn" style="display:none" onclick="loadSaved()">지난번 결과 다시 보기</button>
-  </div>
-
-  <div class="menu">
-    <div class="it"><span class="ic">☀️</span><div><b>태양 별자리 · 원소 밸런스</b><small>나의 기본 성격과 강점</small></div><span class="tag free">무료</span></div>
-    <div class="it"><span class="ic">🪐</span><div><b>출생 차트(호로스코프)</b><small>태어난 순간의 행성 7개 위치</small></div><span class="tag free">무료</span></div>
-    <div class="it"><span class="ic">🔮</span><div><b>오늘 · 내일의 운세</b><small>달의 움직임으로 보는 하루</small></div><span class="tag free">무료</span></div>
-    <div class="it"><span class="ic">💞</span><div><b>별자리 궁합</b><small>그 사람과 나의 케미 점수</small></div><span class="tag free">무료</span></div>
-    <div class="it"><span class="ic">🌕</span><div><b>달·상승궁·금성·화성·수성 풀이</b><small>속마음, 첫인상, 연애 스타일</small></div><span class="tag pay">990원</span></div>
-    <div class="it"><span class="ic">📅</span><div><b><span class="yr"></span>년 신년운세 · 월별 운세</b><small>목성·토성 흐름과 12달 연애·일 운</small></div><span class="tag pay">990원</span></div>
-    <div class="it"><span class="ic">💘</span><div><b>정밀 궁합</b><small>감정 궁합(달)·끌림 궁합(금성×화성)</small></div><span class="tag pay">990원</span></div>
-  </div>
-  <p class="foot">유료 항목은 990원 한 번으로 전부 열려요.<br>재미로 보는 풀이예요. 중요한 결정은 스스로의 판단으로!<br><a href="../">사상체질 풀이 보러 가기 →</a></p>
-</section>
-
-<!-- 로딩 -->
-<section class="screen" id="s-load">
-  <div class="loader"><div class="orb"></div><p id="loadTxt">태어난 순간의 하늘을<br>계산하고 있어요…</p></div>
-</section>
-
-<!-- 결과 -->
-<section class="screen" id="s-res">
-  <div class="rhead" id="rHead"></div>
-  <div class="tabs" id="tabs">
-    <button class="on" data-t="chart">내 차트</button>
-    <button data-t="today">오늘 운세</button>
-    <button data-t="year"><span class="yr"></span> 운세</button>
-    <button data-t="love">궁합</button>
-  </div>
-  <div class="pane on" id="p-chart"></div>
-  <div class="pane" id="p-today"></div>
-  <div class="pane" id="p-year"></div>
-  <div class="pane" id="p-love">
-    <div class="card">
-      <h3>💞 별자리 궁합</h3>
-      <label class="l" for="ptNm">상대 이름</label>
-      <input type="text" id="ptNm" maxlength="10" placeholder="예: 달빛" autocomplete="off">
-      <label class="l" for="ptBd">상대 생년월일 (양력)</label>
-      <input type="date" id="ptBd" min="1920-01-01" max="2049-12-31" value="1995-06-15">
-      <div class="err" id="ptErr"></div>
-      <button class="btn" onclick="doCompat()">궁합 보기</button>
+    <label class="l" for="placeQ">태어난 곳</label>
+    <div class="srow"><input type="text" id="placeQ" placeholder="도시·동네 검색 (예: 부산 해운대)" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();searchPlace()}"><button type="button" onclick="searchPlace()">검색</button></div>
+    <div class="sres" id="sres"></div>
+    <div id="map"></div>
+    <div class="place"><span>📍</span><span id="placeName">서울</span><small id="placeCo"></small></div>
+    <p class="hint">지도를 누르거나 핀을 끌어서 태어난 곳을 정할 수 있어요.</p>
+    <select id="cityIn" style="margin-top:8px" aria-label="주요 도시 빠른 선택"></select>
+    <div id="tzRow" style="display:none">
+      <label class="l" for="tzIn">현지 시간대 (해외 출생)</label>
+      <select id="tzIn"></select>
+      <p class="hint">태어난 날이 그 나라의 서머타임 기간이었다면 1시간 더한 값을 골라 주세요.</p>
     </div>
-    <div id="compatOut"></div>
+    <p class="hint">시간을 알면 상승궁·하우스·배우자 자리까지 정확하게 볼 수 있어요. 국내 출생은 서머타임 시기(1948~60, 1987~88년)도 자동으로 보정해요.</p>
+    <div class="err" id="inErr"></div>
+    <button class="btn" onclick="saveProfile()">✦ 저장하고 풀이 고르기</button>
+    <button class="btn ghost mt8" id="cancelEdit" style="display:none" onclick="showProfile()">취소</button>
   </div>
-  <button class="btn dark" onclick="copyLink()">🔗 친구에게 사이트 공유하기</button>
-  <button class="btn ghost mt10" onclick="go('s-home')">다른 생일로 다시 보기</button>
+
+  <div class="orn">THE READINGS</div>
+  <div class="deck" id="deck"></div>
+  <p class="foot">유료 풀이는 항목마다 990원이에요. 한 번 열면 이 기기에서 계속 볼 수 있어요.<br>재미로 보는 풀이예요. 중요한 결정은 스스로의 판단으로!<br><a href="../">사상체질 풀이 보러 가기</a></p>
+</section>
+
+<section class="screen" id="s-load">
+  <div class="loader">
+    <svg viewBox="0 0 140 140"><circle cx="70" cy="70" r="62" fill="none" stroke="rgba(201,169,97,.25)"/><circle cx="70" cy="70" r="62" fill="none" stroke="#ecd9a2" stroke-width="2" stroke-dasharray="60 330"/><circle cx="70" cy="70" r="44" fill="none" stroke="rgba(201,169,97,.35)" stroke-dasharray="2 5"/><text x="70" y="72" text-anchor="middle" dominant-baseline="central" fill="#ecd9a2" font-size="30" class="sym">✦</text></svg>
+    <p id="loadTxt">태어난 순간의 하늘을<br>계산하고 있어요</p>
+  </div>
+</section>
+
+<section class="screen" id="s-view">
+  <div class="vbar"><button onclick="goHome()">← 메뉴</button><div class="tt"><small id="vEn"></small><b id="vKo"></b></div><span class="sp"></span></div>
+  <div id="vBody"></div>
+  <div class="orn">OTHER READINGS</div>
+  <div class="mini" id="mini"></div>
+  <button class="btn ghost" onclick="share()">친구에게 사이트 공유하기</button>
   <p class="foot">재미로 보는 풀이예요. 중요한 결정은 스스로의 판단으로!<br>열대 황도대 · 홀사인 하우스 기준</p>
 </section>
 </div>
@@ -247,20 +273,22 @@ input:focus,select:focus{outline:none;border-color:var(--gold)}
 <div class="modal" id="payModal" onclick="if(event.target===this)closePay()">
   <div class="sheet">
     <button class="closex" onclick="closePay()" aria-label="닫기">✕</button>
-    <div class="title-s">🔮 상세풀이 전체 열기</div>
-    <div class="desc-s">달·상승궁·행성 풀이, <span class="yr"></span>년 신년운세, 정밀 궁합이 모두 열려요. 한 번 열면 이 기기에서 계속 볼 수 있어요.</div>
-    <div class="step"><span class="n">1</span><div class="c"><b>990원을 보내주세요</b><br>버튼을 누르면 카카오페이가 열려요. 금액(990원)을 확인하고, 메모에 주문번호 <span class="order" id="orderNo"></span>을 적어주시면 좋아요.
+    <div class="title-s" id="payTitle">풀이 열기</div>
+    <div class="desc-s" id="payDesc"></div>
+    <div class="step"><span class="n">1</span><div class="c"><b>990원을 보내주세요</b><br>버튼을 누르면 카카오페이가 열려요. 금액(990원)을 확인하고, 메모에 주문번호 <span class="order" id="orderNo"></span>을 적어 주시면 좋아요.
       <div id="payBtns"></div></div></div>
     <div class="step"><span class="n">2</span><div class="c"><b>송금 후 입금자명을 적고 눌러주세요</b>
       <input type="text" id="payerIn" placeholder="입금자명" maxlength="10" autocomplete="off" style="margin-top:8px">
       <div class="err" id="payErr"></div>
-      <button class="btn" id="paidBtn" onclick="honorPaid()">송금 완료 · 상세풀이 열기</button></div></div>
+      <button class="btn" id="paidBtn" onclick="honorPaid()">송금 완료 · 풀이 열기</button></div></div>
     <p style="font-size:12px;color:var(--muted);line-height:1.6">양심 결제 방식이에요. 재미와 생활 참고용 풀이예요.</p>
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="calc.js"></script>
 <script src="data.js"></script>
+<script src="data2.js"></script>
 <script>
 /* ===== 결제 안내 설정 (여기만 바꾸면 돼요) ===== */
 const PAY={
@@ -268,190 +296,313 @@ const PAY={
   kakaopay:"https://qr.kakaopay.com/FPgeFkAPs1ef09684",
   toss:""   // 토스 송금 링크 (예: https://toss.me/아이디/990)
 };
-const CITIES=[["서울",37.5665,126.978],["부산",35.1796,129.0756],["대구",35.8714,128.6014],["인천",37.4563,126.7052],["광주",35.1595,126.8526],["대전",36.3504,127.3845],["울산",35.5384,129.3114],["세종",36.48,127.289],["수원",37.2636,127.0286],["성남",37.42,127.1265],["고양",37.6584,126.832],["의정부",37.7381,127.0337],["춘천",37.8813,127.7298],["원주",37.3422,127.9202],["강릉",37.7519,128.8761],["청주",36.6424,127.489],["충주",36.991,127.926],["천안",36.8151,127.1139],["공주",36.4465,127.119],["전주",35.8242,127.148],["군산",35.9676,126.7366],["목포",34.8118,126.3922],["여수",34.7604,127.6622],["순천",34.9506,127.4872],["포항",36.019,129.3435],["경주",35.8562,129.2247],["안동",36.5684,128.7294],["구미",36.1195,128.3446],["창원·마산",35.2281,128.6811],["진주",35.18,128.108],["김해",35.2285,128.8894],["통영·거제",34.8806,128.6211],["제주",33.4996,126.5312],["서귀포",33.2541,126.56],["평양",39.0392,125.7625],["기타(국내) — 서울 기준",37.5665,126.978]];
+const CITIES=[["서울",37.5665,126.978],["부산",35.1796,129.0756],["대구",35.8714,128.6014],["인천",37.4563,126.7052],["광주",35.1595,126.8526],["대전",36.3504,127.3845],["울산",35.5384,129.3114],["세종",36.48,127.289],["수원",37.2636,127.0286],["성남",37.42,127.1265],["고양",37.6584,126.832],["의정부",37.7381,127.0337],["춘천",37.8813,127.7298],["원주",37.3422,127.9202],["강릉",37.7519,128.8761],["청주",36.6424,127.489],["충주",36.991,127.926],["천안",36.8151,127.1139],["공주",36.4465,127.119],["전주",35.8242,127.148],["군산",35.9676,126.7366],["목포",34.8118,126.3922],["여수",34.7604,127.6622],["순천",34.9506,127.4872],["포항",36.019,129.3435],["경주",35.8562,129.2247],["안동",36.5684,128.7294],["구미",36.1195,128.3446],["창원·마산",35.2281,128.6811],["진주",35.18,128.108],["김해",35.2285,128.8894],["통영·거제",34.8806,128.6211],["제주",33.4996,126.5312],["서귀포",33.2541,126.56],["평양",39.0392,125.7625]];
 const $=id=>document.getElementById(id);
-const S=Astro.sign,PL=[["sun","☉","태양"],["moon","☽","달"],["mercury","☿","수성"],["venus","♀","금성"],["mars","♂","화성"],["jupiter","♃","목성"],["saturn","♄","토성"]];
-const VS="︎",gl=i=>SIGNS[i].g+VS,ECOL=["var(--fire)","var(--earth)","var(--air)","var(--water)"],ECOLH=["#d9653b","#5f8a43","#c9a227","#3f78b5"];
+const S=Astro.sign,VS="︎";
+const PL=[["sun","☉","태양"],["moon","☽","달"],["mercury","☿","수성"],["venus","♀","금성"],["mars","♂","화성"],["jupiter","♃","목성"],["saturn","♄","토성"]];
+const gl=i=>SIGNS[i].g+VS,ECOL=["var(--fire)","var(--earth)","var(--air)","var(--water)"],ECOLH=["#e0774c","#7fae5f","#e2c35a","#5f9ad8"];
 const now=new Date(),YEAR=now.getMonth()>=9?now.getFullYear()+1:now.getFullYear();
-let U=null,C=null,paid=false;
-try{paid=localStorage.getItem('astro_paid')==='1'}catch(e){}
-document.querySelectorAll('.yr').forEach(e=>e.textContent=YEAR);
-$('cityIn').innerHTML=CITIES.map((c,i)=>`<option value="${i}">${c[0]}</option>`).join("");
+const ITEMS=[
+ {id:"sun",rn:"I",g:"☉",ko:"태양 별자리",en:"THE SUN",d:"타고난 성격과 강점",p:0},
+ {id:"chart",rn:"II",g:"✴",ko:"출생 차트",en:"THE CHART",d:"태어난 순간의 하늘 지도",p:0},
+ {id:"today",rn:"III",g:"☼",ko:"오늘·내일 운세",en:"THE DAY",d:"달이 알려 주는 하루",p:0},
+ {id:"soul",rn:"IV",g:"☽",ko:"달·상승궁 종합",en:"THE MOON",d:"속마음과 첫인상",p:1},
+ {id:"love",rn:"V",g:"♀",ko:"연애운·이상형",en:"THE LOVERS",d:"사랑 방식과 이상형",p:1},
+ {id:"marriage",rn:"VI",g:"⚭",ko:"결혼운",en:"THE UNION",d:"배우자상과 결혼 시기",p:1},
+ {id:"year",rn:"VII",g:"♃",ko:YEAR+" 신년운세",en:"THE YEAR",d:"분야별 운과 12달 흐름",p:1},
+ {id:"compat",rn:"VIII",g:"☍",ko:"별자리 궁합",en:"THE MATCH",d:"그 사람과 나의 케미",p:2}];
+const IT=Object.fromEntries(ITEMS.map(i=>[i.id,i]));
+let U=null,C=null,PAID={},curView=null,pendingView=null;
+try{PAID=JSON.parse(localStorage.getItem('astro_paid2')||"{}")||{};
+  if(localStorage.getItem('astro_paid')==='1'){["soul","love","marriage","year","compat"].forEach(k=>PAID[k]=1);localStorage.setItem('astro_paid2',JSON.stringify(PAID));localStorage.removeItem('astro_paid')}}catch(e){}
+const isPaid=k=>!!PAID[k];
+
 function esc(s){return String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]))}
 function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));$(id).classList.add('on');window.scrollTo(0,0)}
-function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200)}
-function deg(l){const d=l%30;return Math.floor(d)+"°"+String(Math.floor((d%1)*60)).padStart(2,"0")+"'"}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2400)}
+function deg(l){const d=l%30;return Math.floor(d)+"°"+String(Math.floor((d%1)*60)).padStart(2,"0")+"′"}
 function stars(n){n=Math.max(1,Math.min(5,n));return "★".repeat(n)+"☆".repeat(5-n)}
 function rng(seed){let h=1779033703^seed.length;for(let i=0;i<seed.length;i++){h=Math.imul(h^seed.charCodeAt(i),3432918353);h=h<<13|h>>>19}
   return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);h^=h>>>16;return(h>>>0)/4294967296}}
 function dist(a,b){const d=Math.abs(a-b)%12;return Math.min(d,12-d)}
 function harm(d){return d===0||d===2||d===4?0:(d===3||d===6?1:2)}
+const hs=(s,b)=>(s-b+12)%12;
+const sn=i=>SIGNS[i].n;
+function nim(){return U.name==="당신"?"당신":esc(U.name)+"님"}
+function card(title,inner,tag){return `<div class="card"><h3>${title}${tag?` <span class="tag ${tag[0]}">${tag[1]}</span>`:""}</h3>${inner}</div>`}
+function priceTag(k){return isPaid(k)?["open","열림"]:["pay","990원"]}
 
-/* 홈 엠블럼 */
-(function(){let s='<svg viewBox="0 0 230 230"><g class="spin"><circle cx="115" cy="115" r="112" fill="none" stroke="rgba(214,168,79,.5)" stroke-width="1.5"/><circle cx="115" cy="115" r="84" fill="none" stroke="rgba(214,168,79,.35)" stroke-dasharray="3 4"/>';
-  for(let i=0;i<12;i++){const a=(i*30+15)*Math.PI/180,x=115+98*Math.cos(a),y=115+98*Math.sin(a),a2=i*30*Math.PI/180;
-    s+=`<line x1="${115+84*Math.cos(a2)}" y1="${115+84*Math.sin(a2)}" x2="${115+112*Math.cos(a2)}" y2="${115+112*Math.sin(a2)}" stroke="rgba(214,168,79,.35)"/><text x="${x}" y="${y}" fill="#f1d18a" font-size="15" text-anchor="middle" dominant-baseline="central" class="g">${gl(i)}</text>`}
-  s+='</g></svg><div class="core"><b>星座</b><span>ZODIAC</span></div>';$('emblem').innerHTML=s})();
+(function(){let s='<defs><path id="arc" d="M125,125 m-99,0 a99,99 0 1,1 198,0 a99,99 0 1,1 -198,0"/><radialGradient id="cg"><stop offset="0" stop-color="#26357a"/><stop offset="1" stop-color="#0a1033"/></radialGradient></defs>';
+  s+='<circle cx="125" cy="125" r="122" fill="none" stroke="rgba(201,169,97,.55)"/><circle cx="125" cy="125" r="118" fill="none" stroke="rgba(201,169,97,.25)"/>';
+  s+='<g class="rot">';for(let i=0;i<12;i++){const a=(i*30-90)*Math.PI/180,a2=(i*30-75)*Math.PI/180;
+    s+=`<line x1="${125+108*Math.cos(a)}" y1="${125+108*Math.sin(a)}" x2="${125+118*Math.cos(a)}" y2="${125+118*Math.sin(a)}" stroke="rgba(201,169,97,.5)"/><text x="${125+112.5*Math.cos(a2)}" y="${125+112.5*Math.sin(a2)}" fill="#ecd9a2" font-size="10" text-anchor="middle" dominant-baseline="central" class="sym">${gl(i)}</text>`}
+  s+='<circle cx="125" cy="125" r="107" fill="none" stroke="rgba(201,169,97,.4)"/></g>';
+  s+='<g class="rot2"><text fill="rgba(236,217,162,.75)" font-size="9.5" font-family="Cinzel" letter-spacing="4"><textPath href="#arc">AS ABOVE · SO BELOW · AS WITHIN · SO WITHOUT ·</textPath></text></g>';
+  s+='<circle cx="125" cy="125" r="84" fill="none" stroke="rgba(201,169,97,.3)" stroke-dasharray="1 4"/><circle cx="125" cy="125" r="64" fill="url(#cg)" stroke="#c9a961"/>';
+  for(let i=0;i<16;i++){const a=i*22.5*Math.PI/180,r1=i%2?46:42,r2=i%2?54:62;s+=`<line x1="${125+r1*Math.cos(a)}" y1="${125+r1*Math.sin(a)}" x2="${125+r2*Math.cos(a)}" y2="${125+r2*Math.sin(a)}" stroke="#c9a961" stroke-opacity="${i%2?.45:.8}"/>`}
+  s+='<circle cx="125" cy="125" r="34" fill="none" stroke="#ecd9a2" stroke-opacity=".8"/><path d="M134,104 a23,23 0 1,0 0,42 a18,18 0 1,1 0,-42z" fill="#ecd9a2" opacity=".92"/>';
+  [[60,70],[78,52],[96,60],[190,68],[176,90],[200,170],[60,185],[48,150]].forEach(p=>s+=`<circle cx="${p[0]}" cy="${p[1]}" r="1.4" fill="#fff" opacity=".85"/>`);
+  s+='<polyline points="60,70 78,52 96,60" fill="none" stroke="rgba(236,217,162,.35)" stroke-width=".7"/><polyline points="190,68 176,90" fill="none" stroke="rgba(236,217,162,.35)" stroke-width=".7"/>';
+  $('sphere').innerHTML=s})();
 
-/* 입력 → 계산 */
-function readInput(){
-  const name=($('nmIn').value||"").trim()||"당신",bd=$('bdIn').value,nt=$('noTime').checked,bt=$('btIn').value||"12:00",ci=+$('cityIn').value;
+function renderDeck(){$('deck').innerHTML=ITEMS.map(i=>{const tag=i.p===0?'<span class="tag free">무료</span>':i.p===2?(isPaid('compat')?'<span class="tag open">정밀 궁합 열림</span>':'<span class="tag free">기본 무료 · 정밀 990원</span>'):(isPaid(i.id)?'<span class="tag open">열림</span>':'<span class="tag pay">990원</span>');
+  return `<button class="tc" onclick="openView('${i.id}')"><span class="rn">${i.rn}</span><span class="halo"><span class="sym">${i.g}${VS}</span></span><b>${i.ko}</b><span class="en">${i.en}</span><small>${i.d}</small>${tag}</button>`}).join("")}
+function renderMini(){$('mini').innerHTML=ITEMS.map(i=>`<button class="${i.id===curView?"cur":""}" onclick="openView('${i.id}')"><span class="sym">${i.g}${VS}</span>${i.ko.replace(" 신년운세","<br>신년운세").replace("·","·<br>").replace(" 별자리","<br>별자리").replace(" 차트","<br>차트")}</button>`).join("")}
+
+/* ===== 지도 ===== */
+let map=null,marker=null,place={lat:37.5665,lon:126.978,name:"서울"};
+const inKorea=(la,lo)=>la>=33&&la<=43.1&&lo>=124&&lo<=131.9;
+const TZS=[-10,-9,-8,-7,-6,-5,-4,-3.5,-3,-2,-1,0,1,2,3,3.5,4,4.5,5,5.5,5.75,6,6.5,7,8,9,9.5,10,11,12,13];
+$('tzIn').innerHTML=TZS.map(t=>`<option value="${t}">UTC${t>=0?"+":"−"}${Math.floor(Math.abs(t))}:${String(Math.round(Math.abs(t)%1*60)).padStart(2,"0")}</option>`).join("");
+$('cityIn').innerHTML='<option value="">주요 도시 빠른 선택</option>'+CITIES.map((c,i)=>`<option value="${i}">${c[0]}</option>`).join("");
+$('cityIn').onchange=function(){if(this.value==="")return;const c=CITIES[+this.value];setPlace(c[1],c[2],c[0],true);this.value=""};
+function setPlace(lat,lon,name,fly,keepTz){place={lat:+lat,lon:+lon,name:name||place.name};
+  $('placeName').textContent=place.name;$('placeCo').textContent=`${Math.abs(lat).toFixed(2)}°${lat>=0?"N":"S"} ${Math.abs(lon).toFixed(2)}°${lon>=0?"E":"W"}`;
+  const kr=inKorea(lat,lon);$('tzRow').style.display=kr?"none":"block";
+  if(!kr&&!keepTz){const g=Math.round(lon/15);$('tzIn').value=String(TZS.reduce((a,b)=>Math.abs(b-g)<Math.abs(a-g)?b:a))}
+  if(map){marker.setLatLng([lat,lon]);if(fly)map.setView([lat,lon],Math.max(map.getZoom(),9))}}
+function ensureMap(){if(map){setTimeout(()=>map.invalidateSize(),60);return}
+  if(!window.L){$('map').innerHTML='<p class="hint" style="padding:14px">지도를 불러오지 못했어요. 위의 검색이나 아래 도시 선택을 이용해 주세요.</p>';return}
+  map=L.map('map',{zoomControl:true,attributionControl:true}).setView([place.lat,place.lon],7);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18,subdomains:'abcd',attribution:'© OpenStreetMap © CARTO'}).addTo(map);
+  const icon=L.divIcon({className:'',html:'<div style="width:22px;height:22px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#e7cf8f;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.6)"></div>',iconSize:[22,22],iconAnchor:[11,22]});
+  marker=L.marker([place.lat,place.lon],{draggable:true,icon:icon}).addTo(map);
+  map.on('click',e=>pick(e.latlng.lat,e.latlng.lng));marker.on('dragend',()=>{const p=marker.getLatLng();pick(p.lat,p.lng)});
+  setTimeout(()=>map.invalidateSize(),60)}
+let revT=0;
+function pick(lat,lon){setPlace(lat,lon,"지도에서 고른 곳");const my=++revT;
+  fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=12&accept-language=ko&lat=${lat}&lon=${lon}`).then(r=>r.json()).then(d=>{if(my!==revT||!d)return;
+    const a=d.address||{},nm=[a.city||a.county||a.state||a.country,a.borough||a.suburb||a.town||a.village||a.city_district].filter(Boolean);
+    const name=nm.length?[...new Set(nm)].join(" "):(d.display_name||"").split(", ").slice(0,2).join(" ");if(name){place.name=name;$('placeName').textContent=name}}).catch(()=>{})}
+function searchPlace(){const q=($('placeQ').value||"").trim();if(!q)return;$('sres').innerHTML='<p class="hint">찾는 중…</p>';
+  fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&accept-language=ko&q=${encodeURIComponent(q)}`).then(r=>r.json()).then(list=>{
+    if(!list||!list.length){$('sres').innerHTML='<p class="hint">검색 결과가 없어요. 지도를 직접 눌러 주세요.</p>';return}
+    window._sr=list;$('sres').innerHTML=list.map((x,i)=>`<button type="button" onclick="useRes(${i})">📍 ${esc(x.display_name)}</button>`).join("")
+  }).catch(()=>{$('sres').innerHTML='<p class="hint">검색에 실패했어요. 지도를 직접 눌러 주세요.</p>'})}
+function useRes(i){const x=window._sr[i];setPlace(+x.lat,+x.lon,x.display_name.split(", ").slice(0,2).reverse().join(" "),true);$('sres').innerHTML=""}
+
+/* ===== 프로필 ===== */
+function readForm(){
+  const name=($('nmIn').value||"").trim()||"당신",bd=$('bdIn').value,nt=$('noTime').checked,bt=$('btIn').value||"12:00";
   if(!/^\d{4}-\d{2}-\d{2}$/.test(bd))return null;
   const[y,m,d]=bd.split("-").map(Number);if(y<1920||y>2049)return null;
-  const[h,mi]=bt.split(":").map(Number);
-  return{name:name,y:y,m:m,d:d,h:nt?12:h,mi:nt?0:mi,nt:nt,ci:ci}}
-function compute(u){const c=CITIES[u.ci]||CITIES[0],tz=Astro.koreaTZ(u.y,u.m,u.d);
-  const o=Astro.chart(u.y,u.m,u.d,u.h,u.mi,tz,c[1],c[2]);
-  if(u.nt){const a=Astro.chart(u.y,u.m,u.d,0,0,tz,c[1],c[2]),b=Astro.chart(u.y,u.m,u.d,23,59,tz,c[1],c[2]);
+  const[h,mi]=bt.split(":").map(Number);const kr=inKorea(place.lat,place.lon);
+  return{name:name,y:y,m:m,d:d,h:nt?12:h,mi:nt?0:mi,nt:nt,lat:place.lat,lon:place.lon,place:place.name,tz:kr?null:+$('tzIn').value}}
+function tzOf(u){return u.tz==null?Astro.koreaTZ(u.y,u.m,u.d):u.tz}
+function compute(u){const tz=tzOf(u),o=Astro.chart(u.y,u.m,u.d,u.h,u.mi,tz,u.lat,u.lon);
+  if(u.nt){const a=Astro.chart(u.y,u.m,u.d,0,0,tz,u.lat,u.lon),b=Astro.chart(u.y,u.m,u.d,23,59,tz,u.lat,u.lon);
     o.moonAlt=S(a.moon)!==S(b.moon)?[S(a.moon),S(b.moon)]:null;o.asc=null;o.mc=null}
   return o}
-function start(){const u=readInput();if(!u){$('inErr').textContent="생년월일을 확인해 주세요 (1920~2049년)";return}
-  $('inErr').textContent="";U=u;C=compute(u);
-  try{localStorage.setItem('astro_last',JSON.stringify(u))}catch(e){}
-  go('s-load');const msgs=["태어난 순간의 하늘을<br>계산하고 있어요…","행성 7개의 위치를<br>찾고 있어요…","별자리 지도를<br>그리고 있어요…"];let k=0;$('loadTxt').innerHTML=msgs[0];
-  const t=setInterval(()=>{k++;if(k<msgs.length)$('loadTxt').innerHTML=msgs[k]},650);
-  setTimeout(()=>{clearInterval(t);render();go('s-res')},1900)}
-function loadSaved(){try{const u=JSON.parse(localStorage.getItem('astro_last'));if(u&&u.y){fillForm(u);U=u;C=compute(u);render();go('s-res')}}catch(e){}}
 function fillForm(u){$('nmIn').value=u.name==="당신"?"":u.name;$('bdIn').value=`${u.y}-${String(u.m).padStart(2,"0")}-${String(u.d).padStart(2,"0")}`;
-  $('noTime').checked=!!u.nt;$('btIn').disabled=!!u.nt;$('btIn').value=`${String(u.h).padStart(2,"0")}:${String(u.mi).padStart(2,"0")}`;$('cityIn').value=u.ci}
+  $('noTime').checked=!!u.nt;$('btIn').disabled=!!u.nt;$('btIn').value=`${String(u.h).padStart(2,"0")}:${String(u.mi).padStart(2,"0")}`;
+  if(u.tz!=null)$('tzIn').value=String(u.tz);setPlace(u.lat,u.lon,u.place,false,u.tz!=null)}
+function showProfile(){if(!U){showForm();return}
+  const t=U.nt?"시간 모름":`${String(U.h).padStart(2,"0")}:${String(U.mi).padStart(2,"0")}`;
+  $('profCard').innerHTML=`<div class="prof"><span class="av sym">${gl(S(C.sun))}</span><div><b>${esc(U.name==="당신"?"나의 차트":U.name)}</b><small>${U.y}년 ${U.m}월 ${U.d}일 ${t}<br>${esc(U.place||"")} · ${sn(S(C.sun))}</small></div><button onclick="showForm()">수정</button></div>`;
+  $('profCard').style.display="block";$('formCard').style.display="none"}
+function showForm(){$('formCard').style.display="block";$('profCard').style.display="none";$('cancelEdit').style.display=U?"block":"none";ensureMap()}
+function saveProfile(){const u=readForm();if(!u){$('inErr').textContent="생년월일을 확인해 주세요 (1920~2049년)";return}
+  $('inErr').textContent="";U=u;C=compute(u);PT=null;try{localStorage.setItem('astro_last',JSON.stringify(u))}catch(e){}
+  go('s-load');const msgs=["태어난 순간의 하늘을<br>계산하고 있어요","일곱 행성의 자리를<br>찾고 있어요","당신의 별 지도를<br>그리고 있어요"];let k=0;$('loadTxt').innerHTML=msgs[0];
+  const t=setInterval(()=>{k++;if(k<msgs.length)$('loadTxt').innerHTML=msgs[k]},620);
+  setTimeout(()=>{clearInterval(t);showProfile();if(pendingView){const v=pendingView;pendingView=null;openView(v)}else{goHome();setTimeout(()=>{$('deck').scrollIntoView({behavior:'smooth',block:'start'})},200);toast("✦ 이제 보고 싶은 풀이를 골라 보세요")}},1800)}
+function goHome(){go('s-home');renderDeck();if($('formCard').style.display!=="none")ensureMap()}
 
-/* 결과 렌더 */
-function lockBox(inner,label){if(paid)return inner;
-  return `<div class="lockwrap"><div class="blur">${inner}</div><div class="lockcover"><span class="lk">🔒 ${label||"상세풀이에서 볼 수 있어요"}</span><button class="lockbtn" onclick="openPay()">${PAY.price}으로 전체 열기</button></div></div>`}
-function promo(){if(paid)return"";return `<div class="promo"><b>🔮 상세풀이 전체 열기</b><ul><li>🌕 달 별자리 — 진짜 속마음과 감정 패턴</li><li>🌅 상승궁 — 남들이 보는 나의 첫인상</li><li>♀ 금성·♂ 화성·☿ 수성 — 연애·행동·대화 스타일</li><li>📅 ${YEAR}년 신년운세 + 12달 월별 운세</li><li>💘 정밀 궁합 — 감정·끌림 궁합</li></ul><div class="price">한 번 결제로 전부 · <b>${PAY.price}</b></div><button class="btn" onclick="openPay()">990원으로 열기</button></div>`}
-function nim(){return U.name==="당신"?"당신":esc(U.name)+"님"}
-function moonName(){return C.moonAlt?`${SIGNS[C.moonAlt[0]].n} 또는 ${SIGNS[C.moonAlt[1]].n}`:SIGNS[S(C.moon)].n}
-function render(){
-  const su=S(C.sun),sg=SIGNS[su],mo=S(C.moon),nm=esc(U.name);
-  $('rHead').innerHTML=`<div class="big g">${gl(su)}</div><h2>${nim()}은 <em>${sg.n}</em></h2><div class="kw">${sg.kw.map(k=>"#"+k).join(" ")} · ${ELEM_E[su%4]} ${ELEM[su%4]}의 별자리</div>
-   <div class="big3"><div><small>☉ 태양 · 나</small><span class="g">${gl(su)}</span><b>${sg.n}</b></div>
-   <div><small>☽ 달 · 속마음</small><span class="g">${C.moonAlt?"?":gl(mo)}</span><b style="font-size:${C.moonAlt?12:15}px">${moonName()}</b></div>
-   <div><small>↑ 상승 · 첫인상</small><span class="g">${C.asc==null?"?":gl(S(C.asc))}</span><b>${C.asc==null?"시간 필요":SIGNS[S(C.asc)].n}</b></div></div>`;
-  renderChart();renderToday(0);renderYear();
-  $('compatOut').innerHTML="";
-  setTab('chart')}
-function setTab(t){document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
-  document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==='p-'+t))}
-$('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;setTab(b.dataset.t);
-  const y=$('tabs').getBoundingClientRect().top+window.scrollY;if(window.scrollY>y)window.scrollTo(0,y)});
+/* ===== 상세 화면 ===== */
+function openView(id){if(!U){pendingView=id;showForm();$('formCard').scrollIntoView({behavior:'smooth',block:'start'});toast("먼저 출생 정보를 입력해 주세요");return}
+  curView=id;const it=IT[id];$('vEn').textContent=it.rn+" · "+it.en;$('vKo').textContent=it.ko;
+  $('vBody').innerHTML=VIEW[id]();renderMini();go('s-view')}
+function rerender(){if(curView)$('vBody').innerHTML=VIEW[curView]();renderDeck()}
+function lockBox(k,inner,label,sub){if(isPaid(k))return inner;
+  return `<div class="lockwrap"><div class="blur">${inner}</div><div class="lockcover"><span class="lk">🔒 ${label}<small>${sub||"990원으로 이 풀이를 열 수 있어요"}</small></span><button class="lockbtn" onclick="openPay('${k}')">${PAY.price}으로 열기</button></div></div>`}
+function head(glyph,title,kw){return `<div class="vhead"><div class="glyph sym">${glyph}</div><h2>${title}</h2><div class="kw">${kw}</div></div>`}
+function moonName(){return C.moonAlt?`${sn(C.moonAlt[0])} 또는 ${sn(C.moonAlt[1])}`:sn(S(C.moon))}
+const base=()=>C.asc!=null?S(C.asc):S(C.sun);
+const baseNote=()=>C.asc!=null?`상승궁(${sn(S(C.asc))})을 첫 번째 자리로 놓고 계산했어요.`:`태어난 시간을 몰라서 태양 별자리(${sn(S(C.sun))})를 첫 번째 자리로 놓고 계산했어요. 시간을 입력하면 더 정확해져요.`;
+function incl(list){return `<ul class="incl">${list.map(x=>`<li>${x}</li>`).join("")}</ul>`}
 
 function wheelSVG(){
-  const W=340,cx=170,cy=170,R1=162,R2=132,R3=56,base=C.asc==null?0:C.asc;
-  const P=(lon,r)=>{const a=(180+(lon-base))*Math.PI/180;return[cx+r*Math.cos(a),cy-r*Math.sin(a)]};
-  let s=`<svg class="wheel" viewBox="0 0 ${W} ${W}" role="img" aria-label="출생 차트"><circle cx="${cx}" cy="${cy}" r="${R1}" fill="#1c1834" stroke="#d6a84f" stroke-width="1.5"/><circle cx="${cx}" cy="${cy}" r="${R2}" fill="#241f44" stroke="#d6a84f" stroke-opacity=".6"/><circle cx="${cx}" cy="${cy}" r="${R3}" fill="#1c1834" stroke="#d6a84f" stroke-opacity=".4"/>`;
-  for(let i=0;i<12;i++){const[a,b]=P(i*30,R1),[c,d]=P(i*30,R3),[x,y]=P(i*30+15,(R1+R2)/2);
-    s+=`<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" stroke="#d6a84f" stroke-opacity=".3"/><text x="${x}" y="${y}" fill="${ECOLH[i%4]}" font-size="17" text-anchor="middle" dominant-baseline="central" class="g">${gl(i)}</text>`}
-  for(let t=0;t<360;t+=5){const[a,b]=P(t,R2),[c,d]=P(t,R2+(t%30===0?0:t%10===0?6:3));s+=`<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" stroke="#d6a84f" stroke-opacity=".5"/>`}
-  if(C.asc!=null){const[a,b]=P(C.asc,R1+0),[c,d]=P(C.asc+180,R1),[e,f]=P(C.mc,R2),[g2,h]=P(C.mc+180,R2);
-    s+=`<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" stroke="#f1d18a" stroke-width="1.4"/><line x1="${e}" y1="${f}" x2="${g2}" y2="${h}" stroke="#f1d18a" stroke-width="1" stroke-dasharray="4 3"/>`;
-    const[ax,ay]=P(C.asc,R2-14),[mx,my]=P(C.mc,R2-14);s+=`<text x="${ax+2}" y="${ay}" fill="#f1d18a" font-size="10" dominant-baseline="central">ASC</text><text x="${mx}" y="${my}" fill="#f1d18a" font-size="10" text-anchor="middle" dominant-baseline="central">MC</text>`}
-  const arr=PL.map(p=>({k:p[0],g:p[1],l:C[p[0]]})).sort((a,b)=>a.l-b.l);const placed=[];
+  const W=340,cx=170,cy=170,R1=162,R2=132,R3=56,b0=C.asc==null?0:C.asc;
+  const P=(lon,r)=>{const a=(180+(lon-b0))*Math.PI/180;return[cx+r*Math.cos(a),cy-r*Math.sin(a)]};
+  let s=`<svg class="wheel" viewBox="0 0 ${W} ${W}" role="img" aria-label="출생 차트"><circle cx="${cx}" cy="${cy}" r="${R1}" fill="#0a1033" stroke="#c9a961" stroke-width="1.5"/><circle cx="${cx}" cy="${cy}" r="${R1-4}" fill="none" stroke="#c9a961" stroke-opacity=".3"/><circle cx="${cx}" cy="${cy}" r="${R2}" fill="#111a48" stroke="#c9a961" stroke-opacity=".7"/><circle cx="${cx}" cy="${cy}" r="${R3}" fill="#0a1033" stroke="#c9a961" stroke-opacity=".5"/>`;
+  for(let i=0;i<12;i++){const[a,b]=P(i*30,R1-4),[c,d]=P(i*30,R3),[x,y]=P(i*30+15,(R1+R2)/2-2);
+    s+=`<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" stroke="#c9a961" stroke-opacity=".28"/><text x="${x}" y="${y}" fill="${ECOLH[i%4]}" font-size="17" text-anchor="middle" dominant-baseline="central" class="sym">${gl(i)}</text>`}
+  for(let t=0;t<360;t+=5){const[a,b]=P(t,R2),[c,d]=P(t,R2+(t%30===0?0:t%10===0?6:3));s+=`<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" stroke="#c9a961" stroke-opacity=".55"/>`}
+  if(C.asc!=null){const[a,b]=P(C.asc,R1),[c,d]=P(C.asc+180,R1),[e,f]=P(C.mc,R2),[g2,h]=P(C.mc+180,R2);
+    s+=`<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" stroke="#ecd9a2" stroke-width="1.4"/><line x1="${e}" y1="${f}" x2="${g2}" y2="${h}" stroke="#ecd9a2" stroke-width="1" stroke-dasharray="4 3"/>`;
+    const[ax,ay]=P(C.asc,R2-14),[mx,my]=P(C.mc,R2-14);s+=`<text x="${ax+2}" y="${ay}" fill="#ecd9a2" font-size="10" font-family="Cinzel" dominant-baseline="central">ASC</text><text x="${mx}" y="${my}" fill="#ecd9a2" font-size="10" font-family="Cinzel" text-anchor="middle" dominant-baseline="central">MC</text>`}
+  const arr=PL.map(p=>({g:p[1],l:C[p[0]]})).sort((a,b)=>a.l-b.l),placed=[];
   arr.forEach(p=>{const r=[108,86,68].find(rr=>!placed.some(q=>q.r===rr&&Math.min(Astro.norm(p.l-q.l),Astro.norm(q.l-p.l))<10))||108;placed.push({l:p.l,r:r});
     const[x,y]=P(p.l,r),[t1,t2]=P(p.l,R2),[t3,t4]=P(p.l,R2-8);
-    s+=`<line x1="${t1}" y1="${t2}" x2="${t3}" y2="${t4}" stroke="#f5efe3" stroke-width="1.5"/><circle cx="${x}" cy="${y}" r="12" fill="#2a2450" stroke="#f1d18a" stroke-opacity=".5"/><text x="${x}" y="${y+1}" fill="#f5efe3" font-size="15" text-anchor="middle" dominant-baseline="central" class="g">${p.g}${VS}</text>`});
-  s+=`<text x="${cx}" y="${cy-6}" fill="#f1d18a" font-size="13" text-anchor="middle" font-family="Nanum Myeongjo,serif">${esc(U.name)}</text><text x="${cx}" y="${cy+12}" fill="#b8acd0" font-size="10" text-anchor="middle">${U.y}.${U.m}.${U.d}${U.nt?"":" "+String(U.h).padStart(2,"0")+":"+String(U.mi).padStart(2,"0")}</text></svg>`;
+    s+=`<line x1="${t1}" y1="${t2}" x2="${t3}" y2="${t4}" stroke="#f4efe0" stroke-width="1.5"/><circle cx="${x}" cy="${y}" r="12" fill="#1a2560" stroke="#ecd9a2" stroke-opacity=".6"/><text x="${x}" y="${y+1}" fill="#f4efe0" font-size="15" text-anchor="middle" dominant-baseline="central" class="sym">${p.g}${VS}</text>`});
+  s+=`<text x="${cx}" y="${cy-6}" fill="#ecd9a2" font-size="13" text-anchor="middle" font-family="Noto Serif KR,serif">${esc(U.name==="당신"?"NATAL":U.name)}</text><text x="${cx}" y="${cy+12}" fill="#8e94b8" font-size="10" text-anchor="middle" font-family="Cinzel">${U.y}.${U.m}.${U.d}${U.nt?"":" "+String(U.h).padStart(2,"0")+":"+String(U.mi).padStart(2,"0")}</text></svg>`;
   return s}
 
-function renderChart(){
-  const su=S(C.sun),sg=SIGNS[su];
-  const cnt=[0,0,0,0];PL.forEach(p=>cnt[S(C[p[0]])%4]++);if(C.asc!=null)cnt[S(C.asc)%4]++;
-  const tot=cnt.reduce((a,b)=>a+b,0),mx=cnt.indexOf(Math.max(...cnt));
-  const house=l=>C.asc==null?"":`<span>${(S(l)-S(C.asc)+12)%12+1}H</span>`;
-  let h=`<div class="card"><h3>🪐 출생 차트</h3>${wheelSVG()}
-    <div class="plist">${PL.map(p=>`<div><span class="g">${p[1]}${VS}</span>${p[2]} ${SIGNS[S(C[p[0]])].n.replace("자리","")} ${deg(C[p[0]])}${house(C[p[0]])}</div>`).join("")}
-    ${C.asc!=null?`<div><span class="g">↑</span>상승 ${SIGNS[S(C.asc)].n.replace("자리","")} ${deg(C.asc)}</div>`:""}</div>
-    ${U.nt?`<p class="hint">시간을 몰라 정오(12시) 기준으로 그렸어요. 하루 동안 달은 약 13° 움직여요.</p>`:""}</div>`;
-  h+=`<div class="card"><h3><span class="g">${gl(su)}</span> 태양 · ${sg.n} <span class="tag free">무료</span></h3>
-    <p>${sg.desc}</p><dl class="kv"><dt>기간</dt><dd>${sg.d}</dd><dt>원소 · 성질</dt><dd>${ELEM_E[su%4]} ${ELEM[su%4]} · ${MODE[su%3]}</dd><dt>지배 행성</dt><dd>${sg.ru}</dd><dt>강점</dt><dd>${sg.st}</dd><dt>약점</dt><dd>${sg.wk}</dd><dt>행운의 색</dt><dd>${sg.color}</dd></dl></div>`;
-  h+=`<div class="card"><h3>⚖️ 원소 밸런스 <span class="tag free">무료</span></h3><div class="bars">${cnt.map((c,i)=>`<div class="b"><span>${ELEM_E[i]} ${ELEM[i]}</span><div class="track"><div class="fill" style="width:${c/tot*100}%;background:${ECOL[i]}"></div></div><span>${c}</span></div>`).join("")}</div><p class="hint" style="font-size:14px;color:var(--text);margin-top:12px">${ELEM_DESC[mx]}</p></div>`;
-  const mo=S(C.moon),me=S(C.mercury),ve=S(C.venus),ma=S(C.mars);
-  const det=`<div class="sec"><h4><span class="g">☽${VS}</span>달 · ${moonName()} <small>속마음·감정</small></h4><p>${C.moonAlt?MOON[C.moonAlt[0]]+"<br><br><b>"+SIGNS[C.moonAlt[1]].n+"라면:</b> "+MOON[C.moonAlt[1]]:MOON[mo]}</p></div>
-   <div class="sec"><h4><span class="g">↑</span>상승궁 · ${C.asc==null?"시간이 필요해요":SIGNS[S(C.asc)].n} <small>첫인상·겉모습</small></h4><p>${C.asc==null?"태어난 시간을 입력하면 상승궁과 하우스를 볼 수 있어요. 상승궁은 약 2시간마다 바뀌어서 시간이 꼭 필요해요.":ASC[S(C.asc)]}</p></div>
-   <div class="sec"><h4><span class="g">♀${VS}</span>금성 · ${SIGNS[ve].n} <small>연애·취향</small></h4><p>${VEN[ve]}</p></div>
-   <div class="sec"><h4><span class="g">♂${VS}</span>화성 · ${SIGNS[ma].n} <small>행동력·욕망</small></h4><p>${MARS[ma]}</p></div>
-   <div class="sec"><h4><span class="g">☿${VS}</span>수성 · ${SIGNS[me].n} <small>생각·말투</small></h4><p>${MERC[me]}</p></div>`;
-  h+=`<div class="card"><h3>🌕 행성별 상세풀이 <span class="tag pay">990원</span></h3>${lockBox(det,"달·상승궁·금성·화성·수성 풀이")}</div>`;
-  h+=promo();
-  $('p-chart').innerHTML=h}
+const VIEW={};
+VIEW.sun=()=>{const su=S(C.sun),sg=SIGNS[su],e=su%4;
+  const same=[0,1,2].map(k=>(e+k*4)%12).filter(x=>x!==su);
+  return head(gl(su),`${nim()}의 태양은<br><em>${sg.n}</em>`,sg.kw.map(k=>"#"+k).join("  "))+
+   card(`<span class="sym">☉${VS}</span> 타고난 성격`,`<p class="lead">${sg.desc}</p><dl class="kv"><dt>기간</dt><dd>${sg.d}</dd><dt>원소</dt><dd>${ELEM_E[e]} ${ELEM[e]} · ${MODE[su%3]}</dd><dt>지배 행성</dt><dd>${sg.ru}</dd><dt>강점</dt><dd>${sg.st}</dd><dt>약점</dt><dd>${sg.wk}</dd><dt>행운의 색</dt><dd>${sg.color}</dd><dt>행운의 숫자</dt><dd>${sg.num}</dd></dl>`,["free","무료"])+
+   card("태양 별자리란?",`<p>태양 별자리는 태어난 날 태양이 머물던 별자리예요. 흔히 '내 별자리'라고 부르는 것이 바로 이것으로, 삶의 방향과 에너지, 내가 빛나는 방식을 보여 줘요.</p><p>${sg.n}는 ${ELEM[e]} 원소의 ${MODE[su%3]}이에요. 같은 ${ELEM[e]} 원소인 ${same.map(sn).join(", ")}와는 기본적인 리듬이 비슷해서 말이 잘 통하는 편이에요.</p><div class="quote">태양은 '겉으로 드러나는 나'예요. 속마음은 달, 첫인상은 상승궁이 알려 줘요. 세 가지를 함께 보면 훨씬 입체적인 내가 보여요.</div><button class="btn ghost" onclick="openView('soul')">☽ 달·상승궁 종합 풀이 보기</button>`)};
+
+VIEW.chart=()=>{const cnt=[0,0,0,0],mc=[0,0,0];PL.forEach(p=>{const s=S(C[p[0]]);cnt[s%4]++;mc[s%3]++});if(C.asc!=null){cnt[S(C.asc)%4]++;mc[S(C.asc)%3]++}
+  const tot=cnt.reduce((a,b)=>a+b,0),mx=cnt.indexOf(Math.max(...cnt)),mn=cnt.indexOf(Math.min(...cnt));
+  const house=l=>C.asc==null?"":` · ${hs(S(l),S(C.asc))+1}하우스`;
+  return head("✴"+VS,`${nim()}의 <em>출생 차트</em>`,`${U.y}년 ${U.m}월 ${U.d}일 ${U.nt?"(시간 모름)":String(U.h).padStart(2,"0")+":"+String(U.mi).padStart(2,"0")} · ${esc(U.place||"")}`)+
+   card("하늘의 지도",wheelSVG()+`<div class="plist">${PL.map(p=>`<div><span class="sym">${p[1]}${VS}</span><span>${p[2]} · ${sn(S(C[p[0]]))} ${deg(C[p[0]])}</span><em>${PLANET_KW[p[0]]}${house(C[p[0]])}</em></div>`).join("")}
+    ${C.asc!=null?`<div><span class="sym">↑</span><span>상승궁 · ${sn(S(C.asc))} ${deg(C.asc)}</span><em>첫인상, 겉모습</em></div><div><span class="sym" style="font-size:12px">MC</span><span>천정 · ${sn(S(C.mc))} ${deg(C.mc)}</span><em>직업, 사회적 모습</em></div>`:""}</div>
+    ${U.nt?`<p class="hint">태어난 시간을 몰라서 낮 12시 기준으로 그렸어요. 달은 하루에 약 13°씩 움직이기 때문에 실제 위치와 조금 다를 수 있어요.</p>`:""}`,["free","무료"])+
+   card("원소 밸런스",`<div class="bars">${cnt.map((c,i)=>`<div class="b"><span>${ELEM_E[i]} ${ELEM[i]}</span><div class="track"><div class="fill" style="width:${c/tot*100}%;background:${ECOL[i]}"></div></div><span>${c}</span></div>`).join("")}</div><p style="margin-top:14px">${ELEM_DESC[mx]}</p>${cnt[mn]===0?`<p>반대로 ${ELEM[mn]} 원소가 비어 있어요. ${["열정과 자신감이 필요할 때는 몸을 움직이는 활동이","현실적인 기반이 흔들릴 때는 규칙적인 루틴이","생각이 막힐 때는 사람들과의 대화가","감정이 메마를 때는 음악이나 영화 같은 감성 충전이"][mn]} 부족한 기운을 채워 줘요.</p>`:""}`)+
+   card("행동 방식",`<div class="bars">${mc.map((c,i)=>`<div class="b"><span>${MODE[i]}</span><div class="track"><div class="fill" style="width:${c/tot*100}%;background:var(--accent)"></div></div><span>${c}</span></div>`).join("")}</div><p style="margin-top:14px">${["활동궁이 많으면 무언가를 '시작'하는 힘이 강해요. 새 프로젝트의 첫 단추를 끼우는 역할이 잘 맞아요.","고정궁이 많으면 한번 시작한 일을 '지속'하는 힘이 강해요. 꾸준함과 끈기가 가장 큰 무기예요.","변통궁이 많으면 상황에 맞게 '적응'하는 힘이 강해요. 유연하게 방향을 바꾸며 다양한 일을 해내요."][mc.indexOf(Math.max(...mc))]}</p>`)};
 
 let dayOff=0;
 function kstDate(off){const t=new Date(Date.now()+9*3600e3+off*864e5);return[t.getUTCFullYear(),t.getUTCMonth()+1,t.getUTCDate()]}
-function renderToday(off){dayOff=off;
-  const[y,m,d]=kstDate(off),tr=Astro.chart(y,m,d,12,0,9,37.5665,126.978),su=S(C.sun);
-  const th=(S(tr.moon)-su+12)%12,vh=(S(tr.venus)-su+12)%12,mh=(S(tr.mars)-su+12)%12;
+VIEW.today=()=>{const off=dayOff,[y,m,d]=kstDate(off),tr=Astro.chart(y,m,d,12,0,9,37.5665,126.978),su=S(C.sun);
+  const th=hs(S(tr.moon),su),vh=hs(S(tr.venus),su),mh=hs(S(tr.mars),su);
   const r=rng(`${y}${m}${d}|${U.y}${U.m}${U.d}|${su}`),j=()=>Math.floor(r()*3)-1;
   const tot=MOON_T_SC[th]+j(),love=MON_SC_V[vh]+(th===4||th===6?1:0)+j(),money=(th===1||th===7||th===9?4:3)+j(),health=(th===5||th===11?2:4)+j();
   const DOW="일월화수목금토"[new Date(Date.UTC(y,m-1,d)).getUTCDay()];
-  $('p-today').innerHTML=`<div class="card"><div class="daysel"><button class="${off===0?"on":""}" onclick="renderToday(0)">오늘</button><button class="${off===1?"on":""}" onclick="renderToday(1)">내일</button></div>
-   <h3>🔮 ${m}월 ${d}일(${DOW}) ${SIGNS[su].n} 운세 <span class="tag free">무료</span></h3>
-   <p>${MOON_T[th]}</p>
-   <p class="hint">오늘 달은 ${SIGNS[S(tr.moon)].n}에 있어요 → ${nim()}의 ${th+1}번째 자리(${HOUSE[th]})</p>
-   <div style="margin-top:12px"><div class="score"><span>총운</span><span class="stars-s">${stars(tot)}</span></div><div class="score"><span>애정운</span><span class="stars-s">${stars(love)}</span></div><div class="score"><span>금전운</span><span class="stars-s">${stars(money)}</span></div><div class="score"><span>건강운</span><span class="stars-s">${stars(health)}</span></div></div>
+  return head(gl(su),`${m}월 ${d}일 ${DOW}요일<br><em>${sn(su)}</em>의 하루`,"달이 지나가는 자리로 읽는 하루의 흐름")+
+   `<div class="card"><div class="daysel"><button class="${off===0?"on":""}" onclick="dayOff=0;rerender()">오늘</button><button class="${off===1?"on":""}" onclick="dayOff=1;rerender()">내일</button></div>
+   <h3><span class="sym">☼${VS}</span> ${off?"내일":"오늘"}의 메시지</h3><p class="lead">${MOON_T[th]}</p>
+   <div class="quote">이날 달은 ${sn(S(tr.moon))}를 지나고 있어요. ${sn(su)}에게 ${sn(S(tr.moon))}는 ${ORD[th]} 번째 자리이고, 이 자리는 '${HOUSE[th]}'의 영역이에요. 그래서 이날은 이 분야의 일들이 마음에 크게 와닿아요.</div>
+   <div style="margin-top:14px"><div class="score"><span>총운</span><span class="st">${stars(tot)}</span></div><div class="score"><span>애정운</span><span class="st">${stars(love)}</span></div><div class="score"><span>금전운</span><span class="st">${stars(money)}</span></div><div class="score"><span>건강운</span><span class="st">${stars(health)}</span></div></div>
    <div class="lucky"><div><small>행운의 색</small>${LCOLORS[Math.floor(r()*LCOLORS.length)]}</div><div><small>행운의 숫자</small>${1+Math.floor(r()*45)}</div><div><small>행운의 시간</small>${["오전 9시","오전 11시","오후 1시","오후 3시","오후 5시","저녁 7시","밤 9시"][Math.floor(r()*7)]}</div></div>
-   <p class="hint" style="margin-top:12px">💡 오늘의 개운법: <b>${TIPS[Math.floor(r()*TIPS.length)]}</b></p></div>
-   <div class="card"><h3>💫 지금 하늘의 행성</h3><div class="plist">${PL.map(p=>`<div><span class="g">${p[1]}${VS}</span>${p[2]} ${SIGNS[S(tr[p[0]])].n.replace("자리","")}<span>${(S(tr[p[0]])-su+12)%12+1}번째</span></div>`).join("")}</div>
-   <p class="hint">금성(사랑)은 ${vh+1}번째 자리: ${VEN_M[vh]}. 화성(에너지)은 ${mh+1}번째 자리: ${MARS_M[mh]}.</p></div>`}
+   <p style="margin-top:16px">${off?"내일":"오늘"}의 개운법은 <b style="color:var(--gold2)">'${TIPS[Math.floor(r()*TIPS.length)]}'</b>이에요. 작은 행동 하나가 하루의 흐름을 부드럽게 바꿔 줘요.</p></div>`+
+   card("사랑과 에너지",`<p><b style="color:var(--rose)">사랑의 별 금성</b>은 지금 ${sn(S(tr.venus))}, ${nim()}의 ${ORD[vh]} 번째 자리에 있어요. ${VEN_MS[vh]}</p><p><b style="color:var(--gold2)">행동의 별 화성</b>은 ${sn(S(tr.mars))}, ${ORD[mh]} 번째 자리에 있어요. ${MARS_MS[mh]}</p>`)+
+   card("지금 하늘의 행성",`<div class="plist">${PL.map(p=>`<div><span class="sym">${p[1]}${VS}</span><span>${p[2]} · ${sn(S(tr[p[0]]))}</span><em>${ORD[hs(S(tr[p[0]]),su)]} 번째 자리</em></div>`).join("")}</div>`)};
 
-function renderYear(){
-  const base=C.asc!=null?S(C.asc):S(C.sun),bn=C.asc!=null?"상승궁("+SIGNS[base].n+")":"태양 별자리("+SIGNS[base].n+")";
-  const months=[];for(let m=1;m<=12;m++){const t=Astro.chart(YEAR,m,15,12,0,9,37.5665,126.978);months.push(t)}
+VIEW.soul=()=>{const su=S(C.sun),mo=S(C.moon),as=C.asc==null?null:S(C.asc),me=S(C.mercury),ma=S(C.mars),M=MOON_D[mo];
+  const pk=[su%4,mo%4].sort().join("");
+  const moonTxt=C.moonAlt?`<div class="quote">태어난 시간을 몰라서 달이 ${sn(C.moonAlt[0])}와 ${sn(C.moonAlt[1])} 중 어디에 있었는지 확실하지 않아요. 아래는 ${sn(mo)} 기준 풀이예요. 더 와닿는 쪽이 당신의 달일 가능성이 높아요.</div>`:"";
+  const A=as!=null?ASC_D[as]:null;
+  const det=`<div class="sec"><h4><span class="sym">☽${VS}</span>달 · ${sn(mo)} <small>진짜 속마음</small></h4>${moonTxt}<p>${M.core}</p></div>
+   <div class="sec"><h4>스트레스를 받을 때</h4><p>${M.stress}</p></div>
+   <div class="sec"><h4>마음을 회복하는 방법</h4><p>${M.heal}</p></div>
+   <div class="sec"><h4>나에게 필요한 사람</h4><p>${M.need}</p></div>
+   <div class="orn">ASCENDANT</div>
+   ${A?`<div class="sec"><h4><span class="sym">↑</span>상승궁 · ${sn(as)} <small>남들이 보는 나</small></h4><p>${A.first}</p></div>
+   <div class="sec"><h4>외모와 분위기</h4><p>${A.look}</p></div>
+   <div class="sec"><h4>인생을 대하는 태도</h4><p>${A.life}</p></div>
+   <div class="sec"><h4>첫인상 조언</h4><p>${A.tip}</p></div>`:`<div class="sec"><h4><span class="sym">↑</span>상승궁 <small>남들이 보는 나</small></h4><p>상승궁은 태어난 순간 동쪽 지평선에 떠오르던 별자리예요. 약 2시간마다 바뀌기 때문에 태어난 시간이 꼭 필요해요. 메뉴에서 출생 정보를 수정해 시간을 입력하면 첫인상, 외모 분위기, 인생 태도까지 자세히 볼 수 있어요.</p></div>`}
+   <div class="orn">SYNTHESIS</div>
+   <div class="sec"><h4>세 별의 종합 풀이</h4><p>${nim()}은 겉으로는 ${sn(su)}의 모습으로 살아가고, 속으로는 ${sn(mo)}의 마음을 품고 있어요${as!=null?`. 처음 만난 사람에게는 ${sn(as)}의 분위기로 다가가요`:""}.</p><p>${SM_PAIR[pk]}</p>${as!=null?`<p>${as===su?`상승궁과 태양이 같은 ${sn(su)}라서, 처음 본 사람도 당신의 본모습을 금방 알아봐요. 겉과 속이 투명한 사람이라는 인상을 줘요.`:as%4===su%4?`상승궁과 태양이 같은 ${ELEM[su%4]} 원소라서 첫인상과 실제 성격 사이의 차이가 적어요. 알고 지낼수록 '처음 느낌 그대로'라는 말을 듣기 쉬워요.`:`상승궁(${ELEM[as%4]})과 태양(${ELEM[su%4]})의 원소가 달라서, 첫인상과 실제 성격 사이에 반전이 있어요. 오래 알고 지낸 사람일수록 '알고 보니 이런 사람이었어?'라며 새로운 매력을 발견해요.`}</p>`:""}</div>
+   <div class="sec"><h4><span class="sym">☿${VS}</span>수성 · ${sn(me)} <small>생각과 말투</small></h4><p>${MERC[me]}</p></div>
+   <div class="sec"><h4><span class="sym">♂${VS}</span>화성 · ${sn(ma)} <small>행동력과 추진력</small></h4><p>${MARS[ma]}</p></div>`;
+  return head("☽"+VS,`${nim()}의 <em>달과 상승궁</em>`,`☉ ${sn(su)} · ☽ ${moonName()} · ↑ ${as==null?"시간 필요":sn(as)}`)+
+   card("이 풀이에 담긴 것",`<p>태양이 '나의 본질'이라면, 달은 아무도 보지 않을 때의 진짜 마음이고 상승궁은 세상이 처음 마주하는 나의 얼굴이에요. 세 별을 함께 읽으면 왜 사람들이 나를 이렇게 보는지, 왜 나는 이럴 때 지치는지가 보여요.</p>${incl(["달 별자리로 보는 감정 패턴, 스트레스 반응, 회복법","나에게 꼭 필요한 사람의 유형","상승궁으로 보는 첫인상, 외모 분위기, 인생 태도","태양·달·상승궁 세 별의 종합 풀이","수성(말투)과 화성(행동력) 풀이"])}`,priceTag('soul'))+
+   card("상세풀이",lockBox('soul',det,"달·상승궁 종합 풀이"),priceTag('soul'))};
+
+VIEW.love=()=>{const ve=S(C.venus),ma=S(C.mars),V=VEN_D[ve],b=base(),ds=(b+6)%12;
+  const months=[];for(let m=1;m<=12;m++)months.push(Astro.chart(YEAR,m,15,12,0,9,37.5665,126.978));
+  const good=[],warn=[];months.forEach((t,i)=>{const vh=hs(S(t.venus),b),mh=hs(S(t.mars),b),jh=hs(S(t.jupiter),b);if([0,4,6].includes(vh)||(jh===4&&vh!==11))good.push(i+1);else if(mh===6||vh===11)warn.push(i+1)});
+  const mt=[[(ve+4)%12,"같은 원소라 연애 리듬과 취향이 자연스럽게 맞아요"],[(ve+8)%12,"말하지 않아도 통하는 편안한 끌림이 있어요"],[(ve+2)%12,"서로 다른 듯 통해서 대화가 즐겁고 함께 성장해요"]];
+  const det=`<div class="sec"><h4><span class="sym">♀${VS}</span>금성 · ${sn(ve)} <small>나의 연애 스타일</small></h4><p>${V.style}</p></div>
+   <div class="sec"><h4>사랑을 표현하는 방법</h4><p>${V.express}</p></div>
+   <div class="sec"><h4><span class="sym">♂${VS}</span>화성 · ${sn(ma)} <small>나의 매력 포인트</small></h4><p>${MARS_LOVE[ma]}</p></div>
+   <div class="orn">THE IDEAL</div>
+   <div class="sec"><h4>나의 이상형</h4><p>${V.ideal}</p><p>여기에 배우자의 자리라고 불리는 일곱 번째 자리가 ${sn(ds)}예요. ${DESC_D[ds].spouse.split(".")[0]}. 연애 상대를 고를 때도 이런 기질을 가진 사람에게 자연스럽게 마음이 가요.</p></div>
+   <div class="sec"><h4>잘 맞는 별자리</h4><div class="match">${mt.map(x=>`<div><span class="sym">${gl(x[0])}</span><b>${sn(x[0])}</b><small>${x[1]}</small></div>`).join("")}</div><p class="hint">상대의 태양 또는 금성이 이 별자리라면 특히 잘 맞아요.</p></div>
+   <div class="sec"><h4>연애할 때 조심할 점</h4><p>${V.caution}</p></div>
+   <div class="orn">${YEAR}</div>
+   <div class="sec"><h4>${YEAR}년 연애운 흐름</h4><p>${good.length?`올해 연애운이 특히 좋은 달은 <b style="color:var(--gold2)">${good.join("월, ")}월</b>이에요. 이때는 금성이 매력·연애·인연의 자리를 지나서, 고백이나 새로운 만남에 좋은 결과를 기대할 수 있어요.`:"올해는 연애운이 특정 달에 몰리기보다 고르게 흐르는 해예요. 일상 속 작은 인연을 소중히 해 주세요."}</p>${warn.length?`<p><b style="color:var(--rose)">${warn.join("월, ")}월</b>에는 감정이 예민해지거나 의견 충돌이 생기기 쉬워요. 이 시기엔 중요한 대화를 서두르지 말고, 서로의 시간을 존중해 주세요.</p>`:""}</div>`;
+  return head("♀"+VS,`${nim()}의 <em>사랑과 이상형</em>`,`♀ 금성 ${sn(ve)} · ♂ 화성 ${sn(ma)}`)+
+   card("이 풀이에 담긴 것",`<p>사랑의 별 금성은 내가 어떻게 사랑하고 무엇에 끌리는지를, 화성은 내가 상대를 사로잡는 방식을 보여 줘요. 여기에 배우자 자리까지 더해 나의 이상형을 그려 드려요.</p>${incl(["금성으로 보는 연애 스타일과 애정 표현법","화성으로 보는 나의 매력 포인트","나의 이상형과 잘 맞는 별자리 세 가지","연애할 때 조심할 점",`${YEAR}년 연애운이 좋은 달과 조심할 달`])}`,priceTag('love'))+
+   card("상세풀이",lockBox('love',det,"연애운·이상형 풀이"),priceTag('love'))};
+
+VIEW.marriage=()=>{const b=base(),ds=(b+6)%12,D=DESC_D[ds],mo=S(C.moon),sa=S(C.saturn);
+  const yrs=[];for(let y=YEAR;y<YEAR+8;y++){const hh=new Set(),sh=new Set();let j0=null;[1,4,7,10].forEach(m=>{const t=Astro.chart(y,m,15,12,0,9,37.5665,126.978);const jh=hs(S(t.jupiter),b);if(j0===null)j0=jh;hh.add(jh);sh.add(hs(S(t.saturn),b))});
+    let sc=2,tx=`행운의 별 목성이 '${HOUSE[j0]}'의 자리를 지나는 해예요. 결혼보다는 이 분야에 운이 모이니, 관계는 서두르지 말고 함께하는 일상을 차곡차곡 쌓아 가기 좋아요.`;
+    if(hh.has(6)){sc=5;tx="행운의 별 목성이 배우자 자리에 들어와요. 결혼운이 가장 강하게 들어오는 해로, 결혼을 결심하거나 평생의 짝을 만날 가능성이 높아요."}
+    else if(hh.has(4)){sc=4;tx="목성이 연애의 자리를 비춰요. 설레는 인연이 찾아오고, 그 인연이 진지한 관계로 이어질 수 있는 해예요."}
+    else if(hh.has(0)){sc=4;tx="목성이 당신 자리에 들어와 새로운 출발의 기운이 강해요. 결혼처럼 인생의 큰 시작을 하기에 좋은 해예요."}
+    else if(hh.has(10)){sc=3;tx="목성이 인맥의 자리를 지나요. 친구나 모임을 통해 좋은 사람을 소개받을 수 있어요."}
+    if(sh.has(6))tx+=" 동시에 토성이 배우자 자리를 지나며 관계를 진지하게 매듭짓게 해요. 신중한 결정이 오래가는 결실을 맺어요.";
+    yrs.push({y:y,sc:sc,tx:tx})}
+  const best=yrs.filter(x=>x.sc>=4).map(x=>x.y);
+  const det=`<div class="sec"><h4><span class="sym">⚭${VS}</span>배우자 자리 · ${sn(ds)} <small>나의 배우자상</small></h4>${C.asc==null?`<div class="quote">태어난 시간을 몰라서 태양 별자리 기준으로 배우자 자리를 계산했어요. 시간을 입력하면 실제 배우자 자리를 볼 수 있어요.</div>`:""}<p>${D.spouse}</p></div>
+   <div class="sec"><h4>인연을 만나는 곳</h4><p>${D.meet}</p></div>
+   <div class="sec"><h4>결혼 생활의 모습</h4><p>${D.life}</p></div>
+   <div class="sec"><h4><span class="sym">☽${VS}</span>가정에서의 나 <small>달 · ${sn(mo)}</small></h4><p>${HOME12[mo]}</p></div>
+   <div class="sec"><h4><span class="sym">♀${VS}</span>사랑이 결혼으로 이어지려면 <small>금성 · ${sn(S(C.venus))}</small></h4><p>${VEN_D[S(C.venus)].caution}</p></div>
+   <div class="orn">TIMING</div>
+   <div class="sec"><h4>결혼운이 들어오는 시기</h4><p>${best.length?`앞으로 8년 중 결혼운이 특히 강한 해는 <b style="color:var(--gold2)">${best.join("년, ")}년</b>이에요.`:"앞으로 8년은 결혼운이 고르게 흐르는 시기예요. 해마다의 흐름을 참고해 주세요."} 행운의 별 목성은 약 12년에 한 바퀴씩 하늘을 돌며, 배우자·연애·나 자신의 자리를 지날 때 인연의 문을 열어 줘요.</p>
+   <div class="yrs">${yrs.map(x=>`<div><b>${x.y}</b><span><span class="st" style="font-size:13px">${stars(x.sc)}</span><p>${x.tx}</p></span></div>`).join("")}</div></div>
+   <div class="sec"><h4><span class="sym">♄${VS}</span>토성의 조언 <small>${sn(sa)}</small></h4><p>책임과 성숙의 별 토성이 ${sn(sa)}에 있는 당신은, 관계 안에서 '${HOUSE[hs(sa,b)]}'의 영역을 특히 진지하게 다루게 돼요. 이 부분을 서두르지 않고 차근차근 쌓을수록 결혼 생활이 단단해져요.</p></div>`;
+  return head("⚭"+VS,`${nim()}의 <em>결혼운</em>`,`배우자 자리 ${sn(ds)} · ${YEAR}~${YEAR+7}년 흐름`)+
+   card("이 풀이에 담긴 것",`<p>출생 차트의 일곱 번째 자리는 결혼과 평생의 파트너를 뜻해요. 이 자리의 별자리로 나의 배우자상과 인연을 만나는 곳을, 행운의 별 목성의 움직임으로 결혼운이 들어오는 시기를 읽어 드려요.</p>${incl(["배우자 자리로 보는 나의 배우자상","인연을 만나는 장소와 계기","결혼 생활의 모습과 가정에서의 나",`${YEAR}~${YEAR+7}년 해마다의 결혼운`,"토성이 주는 결혼 조언"])}`,priceTag('marriage'))+
+   card("상세풀이",lockBox('marriage',det,"결혼운 풀이"),priceTag('marriage'))};
+
+VIEW.year=()=>{const b=base(),months=[];for(let m=1;m<=12;m++)months.push(Astro.chart(YEAR,m,15,12,0,9,37.5665,126.978));
   const seg=k=>{const out=[];months.forEach((t,i)=>{const s=S(t[k]);if(!out.length||out[out.length-1].s!==s)out.push({s:s,from:i+1})});return out};
   const jp=seg('jupiter'),sa=seg('saturn');
-  const per=(a,i)=>a.length>1?`${a[i].from}월${i<a.length-1?"~"+(a[i+1].from-1)+"월":"~12월"} · `:"";
-  let det=`<p class="hint" style="margin-bottom:6px">기준: ${bn}</p>`;
-  jp.forEach((x,i)=>{const hh=(x.s-base+12)%12;det+=`<div class="sec"><h4><span class="g">♃${VS}</span>${per(jp,i)}목성 ${SIGNS[x.s].n} <small>행운·확장 · ${hh+1}번째 자리</small></h4><p>${JUP_H[hh]}</p></div>`});
-  sa.forEach((x,i)=>{const hh=(x.s-base+12)%12;det+=`<div class="sec"><h4><span class="g">♄${VS}</span>${per(sa,i)}토성 ${SIGNS[x.s].n} <small>시련·성장 · ${hh+1}번째 자리</small></h4><p>${SAT_H[hh]}</p></div>`});
-  let mon="";months.forEach((t,i)=>{const vh=(S(t.venus)-base+12)%12,mh=(S(t.mars)-base+12)%12,mh2=(S(t.sun)-base+12)%12;
-    const sc=Math.round((MON_SC_V[vh]+MON_SC_M[mh]+MOON_T_SC[mh2])/3);
-    mon+=`<div class="mon"><b>${i+1}월</b><span class="stars-s">${stars(sc)}</span><span>💗 ${VEN_M[vh]}</span><span>⚡ ${MARS_M[mh]}</span></div>`});
-  const free=`<div class="card"><h3>📅 ${YEAR}년 한눈에 보기 <span class="tag free">미리보기</span></h3><p>${YEAR}년 행운의 별 목성은 ${jp.map(x=>SIGNS[x.s].n).join(" → ")}, 시련과 성장의 별 토성은 ${sa.map(x=>SIGNS[x.s].n).join(" → ")}에 머물러요. ${nim()}에게 ${YEAR}년은 <b>'${HOUSE[(jp[0].s-base+12)%12]}'</b>${jp.length>1?` → <b>'${HOUSE[(jp[jp.length-1].s-base+12)%12]}'</b>`:""}의 영역에 복이 들어오는 해예요.</p></div>`;
-  $('p-year').innerHTML=free+`<div class="card"><h3>🌟 ${YEAR}년 신년운세 <span class="tag pay">990원</span></h3>${lockBox(det,YEAR+"년 목성·토성 운세")}</div>
-   <div class="card"><h3>🗓️ 월별 운세 <span class="tag pay">990원</span></h3>${lockBox(mon,"12달 연애운·일운")}</div>`+promo()}
+  const per=(a,i)=>a.length>1?`${a[i].from}월~${i<a.length-1?(a[i+1].from-1):12}월 · `:"";
+  const jH=new Set(jp.map(x=>hs(x.s,b))),sH=new Set(sa.map(x=>hs(x.s,b)));
+  const area=AREA_H.map(hh=>{let s=1;if(hh.some(h=>jH.has(h)))s++;if(hh.some(h=>sH.has(h)))s--;return Math.max(0,Math.min(2,s))});
+  let det=`<p class="hint" style="margin:0 0 12px">${baseNote()}</p>`;
+  jp.forEach((x,i)=>{const hh=hs(x.s,b);det+=`<div class="sec"><h4><span class="sym">♃${VS}</span>${per(jp,i)}목성 ${sn(x.s)} <small>행운과 확장 · ${ORD[hh]} 번째 자리</small></h4><p>${JUP_H[hh]}</p></div>`});
+  sa.forEach((x,i)=>{const hh=hs(x.s,b);det+=`<div class="sec"><h4><span class="sym">♄${VS}</span>${per(sa,i)}토성 ${sn(x.s)} <small>시련과 성장 · ${ORD[hh]} 번째 자리</small></h4><p>${SAT_H[hh]}</p></div>`});
+  det+=`<div class="orn">BY AREA</div>`+area.map((s,i)=>`<div class="sec"><h4>${AREA_N[i]} <span class="st" style="font-size:13px">${stars(s+2)}</span></h4><p>${AREA_T[i][s]}</p></div>`).join("");
+  let mon="";months.forEach((t,i)=>{const vh=hs(S(t.venus),b),mh=hs(S(t.mars),b),sh=hs(S(t.sun),b);
+    const sc=Math.round((MON_SC_V[vh]+MON_SC_M[mh]+MOON_T_SC[sh])/3);
+    mon+=`<div class="mon"><div class="mh"><b>${i+1}월</b><span class="st" style="font-size:13px">${stars(sc)}</span></div><p><b style="color:var(--rose)">사랑</b> · ${VEN_MS[vh]}</p><p><b style="color:var(--gold2)">일과 에너지</b> · ${MARS_MS[mh]}</p></div>`});
+  const free=`<p class="lead">${YEAR}년 행운의 별 목성은 ${jp.length>1?`${sn(jp[0].s)}에서 ${sn(jp[jp.length-1].s)}로 이동하고`:`${sn(jp[0].s)}에 머물고`}, 시련과 성장의 별 토성은 ${sa.length>1?`${sn(sa[0].s)}에서 ${sn(sa[sa.length-1].s)}로 이동해요`:`${sn(sa[0].s)}에 머물러요`}.</p><p>${nim()}에게 ${YEAR}년은 '${HOUSE[hs(jp[0].s,b)]}'${jp.length>1?`에서 시작해 '${HOUSE[hs(jp[jp.length-1].s,b)]}'까지 이어지는`:"의"} 영역에 복이 들어오는 해예요. 어떤 기회가 오고 무엇을 조심해야 하는지는 상세풀이에서 확인해 보세요.</p>`;
+  return head("♃"+VS,`${nim()}의 <em>${YEAR}년</em>`,"목성과 토성, 그리고 열두 달의 흐름")+
+   card(`${YEAR}년 한눈에 보기`,free,["free","미리보기"])+
+   card("이 풀이에 담긴 것",incl(["목성으로 보는 올해의 행운과 기회","토성으로 보는 올해의 과제와 성장","연애·재물·직업·건강 분야별 운세","12달 월별 운세 (사랑, 일과 에너지)"]),priceTag('year'))+
+   card(`${YEAR}년 신년운세`,lockBox('year',det,YEAR+"년 신년운세"),priceTag('year'))+
+   card("월별 운세",lockBox('year',mon,"12달 월별 운세","신년운세를 열면 함께 볼 수 있어요"),priceTag('year'))};
 
-function doCompat(){
-  const pn=($('ptNm').value||"").trim()||"상대",bd=$('ptBd').value;
-  if(!/^\d{4}-\d{2}-\d{2}$/.test(bd)){$('ptErr').textContent="생년월일을 확인해 주세요";return}$('ptErr').textContent="";
+let PT=null;
+VIEW.compat=()=>card("💞 상대 정보",`<label class="l" for="ptNm">상대 이름</label><input type="text" id="ptNm" maxlength="10" placeholder="예: 달빛" autocomplete="off" value="${PT?esc(PT.n):""}">
+   <label class="l" for="ptBd">상대 생년월일 (양력)</label><input type="date" id="ptBd" min="1920-01-01" max="2049-12-31" value="${PT?PT.bd:"1995-06-15"}">
+   <div class="err" id="ptErr"></div><button class="btn" onclick="doCompat()">궁합 보기</button>`)+`<div id="compatOut">${PT?compatHTML():""}</div>`;
+function doCompat(){const pn=($('ptNm').value||"").trim()||"상대",bd=$('ptBd').value;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(bd)){$('ptErr').textContent="생년월일을 확인해 주세요";return}
   const[y,m,d]=bd.split("-").map(Number);if(y<1920||y>2049){$('ptErr').textContent="1920~2049년 사이로 입력해 주세요";return}
-  const B=Astro.chart(y,m,d,12,0,Astro.koreaTZ(y,m,d),37.5665,126.978);
-  const a=S(C.sun),b=S(B.sun),dd=dist(a,b),D=DIST[dd],ek=[a%4,b%4].sort().join("");
+  PT={n:pn,bd:bd,B:Astro.chart(y,m,d,12,0,Astro.koreaTZ(y,m,d),37.5665,126.978)};$('ptErr').textContent="";
+  $('compatOut').innerHTML=compatHTML();$('compatOut').scrollIntoView({behavior:'smooth',block:'start'})}
+function compatHTML(){const B=PT.B,a=S(C.sun),b=S(B.sun),dd=dist(a,b),D=DIST[dd],ek=[a%4,b%4].sort().join("");
   const mh=harm(dist(S(C.moon),S(B.moon))),v1=harm(dist(S(C.venus),S(B.mars))),v2=harm(dist(S(B.venus),S(C.mars)));
-  const adj=[5,-3,1][mh]+[4,2,0][v1]+[4,2,0][v2];const fine=Math.max(40,Math.min(99,D.s+adj-3));
-  const nm=esc(U.name),pnm=esc(pn);
+  const fine=Math.max(40,Math.min(99,D.s+[5,-3,1][mh]+[4,2,0][v1]+[4,2,0][v2]-3)),me=nim(),pn=esc(PT.n)+"님";
   const det=`<div class="cscore"><div class="n">${fine}<small>점</small></div><div class="t">정밀 궁합 점수</div></div>
-    <div class="sec"><h4><span class="g">☽${VS}</span>감정 궁합 <small>${SIGNS[S(C.moon)].n} × ${SIGNS[S(B.moon)].n}</small></h4><p>${MOON_PAIR[mh]}</p></div>
-    <div class="sec"><h4><span class="g">♀${VS}♂${VS}</span>${nim()} → ${pnm}님 끌림 <small>금성 ${SIGNS[S(C.venus)].n} × 화성 ${SIGNS[S(B.mars)].n}</small></h4><p>${VM_PAIR[v1]}</p></div>
-    <div class="sec"><h4><span class="g">♂${VS}♀${VS}</span>${pnm}님 → ${nim()} 끌림 <small>금성 ${SIGNS[S(B.venus)].n} × 화성 ${SIGNS[S(C.mars)].n}</small></h4><p>${VM_PAIR[v2]}</p></div>
-    <div class="sec"><h4>💡 관계 조언</h4><p>${pnm}님의 연애 스타일: ${VEN[S(B.venus)]}</p></div>`;
-  $('compatOut').innerHTML=`<div class="card"><div class="pair"><span><span class="g">${gl(a)}</span><br>${nm}</span><span style="font-size:22px">💞</span><span><span class="g">${gl(b)}</span><br>${pnm}</span></div>
-    <div class="cscore"><div class="n">${D.s}<small>점</small></div><div class="t">${SIGNS[a].n} × ${SIGNS[b].n} · ${D.t}</div></div>
-    <p>${D.x}</p><p class="hint" style="font-size:14px;color:var(--text);margin-top:10px">${ELEM_E[a%4]}${ELEM_E[b%4]} ${EP[ek]}</p></div>
-    <div class="card"><h3>💘 정밀 궁합 <span class="tag pay">990원</span></h3>${lockBox(det,"감정 궁합 · 끌림 궁합 · 정밀 점수")}</div>`;
-  $('compatOut').scrollIntoView({behavior:'smooth',block:'start'})}
+    <div class="sec"><h4><span class="sym">☽${VS}</span>감정 궁합 <small>달 ${sn(S(C.moon))} × ${sn(S(B.moon))}</small></h4><p>${MOON_PAIR[mh]}</p><p>달은 각자가 마음의 편안함을 느끼는 방식이에요.</p><p><b style="color:var(--gold2)">${me}</b> · ${MOON_D[S(C.moon)].need.split(".")[0]}.</p><p><b style="color:var(--gold2)">${pn}</b> · ${MOON_D[S(B.moon)].need.split(".")[0]}.</p></div>
+    <div class="sec"><h4><span class="sym">♀${VS}♂${VS}</span>${me}이 느끼는 끌림 <small>금성 ${sn(S(C.venus))} × 화성 ${sn(S(B.mars))}</small></h4><p>${VM_PAIR[v1]}</p></div>
+    <div class="sec"><h4><span class="sym">♂${VS}♀${VS}</span>${pn}이 느끼는 끌림 <small>금성 ${sn(S(B.venus))} × 화성 ${sn(S(C.mars))}</small></h4><p>${VM_PAIR[v2]}</p></div>
+    <div class="sec"><h4>${pn}의 연애 스타일</h4><p>${VEN_D[S(B.venus)].style} ${VEN_D[S(B.venus)].express}</p></div>
+    <div class="sec"><h4>두 사람을 위한 조언</h4><p>${["감정의 결이 잘 맞는 두 사람이에요. 편안함에 기대어 표현을 줄이기보다, 고마운 마음을 자주 말로 전해 주세요.","서로 감정을 다루는 방식이 달라요. 서운할 때 '나는 이럴 때 이런 기분이 들어'라고 설명해 주면 오해가 크게 줄어요.","감정의 속도가 조금 달라요. 상대가 마음을 정리할 시간을 존중해 주면 관계가 훨씬 편안해져요."][mh]}</p></div>`;
+  return `<div class="card"><div class="pair"><span><span class="sym">${gl(a)}</span><br>${me}</span><span style="font-size:20px;color:var(--rose)">♥</span><span><span class="sym">${gl(b)}</span><br>${pn}</span></div>
+    <div class="cscore"><div class="n">${D.s}<small>점</small></div><div class="t">${sn(a)} × ${sn(b)} · ${D.t}</div></div><p>${D.x}</p><div class="quote">${ELEM_E[a%4]}${ELEM_E[b%4]} ${EP[ek]}</div></div>`+
+    card("💘 정밀 궁합",`${isPaid('compat')?"":incl(["감정 궁합 (두 사람의 달)","서로가 느끼는 끌림 (금성 × 화성)","상대의 연애 스타일과 두 사람을 위한 조언","정밀 궁합 점수"])}${lockBox('compat',det,"정밀 궁합")}`,priceTag('compat'))}
 
-/* 결제 (양심 결제) */
-let orderNo="";
-function openPay(){
+/* ===== 결제 (양심 결제) ===== */
+let orderNo="",payKey=null;
+function openPay(k){payKey=k;const it=IT[k];
   try{orderNo=localStorage.getItem('astro_order')||""}catch(e){}
   if(!orderNo){orderNo="A"+String(Math.floor(1000+Math.random()*9000));try{localStorage.setItem('astro_order',orderNo)}catch(e){}}
-  $('orderNo').textContent=orderNo;const pb=[];
-  if(PAY.kakaopay)pb.push(`<a class="btn kakao" href="${PAY.kakaopay}" target="_blank" rel="noopener" onclick="markPending()" style="text-decoration:none;text-align:center">카카오페이로 ${PAY.price} 보내기</a>`);
-  if(PAY.toss)pb.push(`<a class="btn dark mt10" href="${PAY.toss}" target="_blank" rel="noopener" onclick="markPending()" style="text-decoration:none;text-align:center">토스로 ${PAY.price} 보내기</a>`);
+  $('payTitle').textContent=`${it.ko} 열기`;$('payDesc').textContent=`'${it.ko}' 상세풀이가 열려요. 한 번 열면 이 기기에서 계속 볼 수 있어요. 다른 유료 풀이는 각각 990원이에요.`;
+  $('orderNo').textContent=orderNo+"-"+k.toUpperCase().slice(0,3);const pb=[];
+  if(PAY.kakaopay)pb.push(`<a class="btn kakao" href="${PAY.kakaopay}" target="_blank" rel="noopener" onclick="markPending()">카카오페이로 ${PAY.price} 보내기</a>`);
+  if(PAY.toss)pb.push(`<a class="btn ghost mt8" href="${PAY.toss}" target="_blank" rel="noopener" onclick="markPending()">토스로 ${PAY.price} 보내기</a>`);
   $('payBtns').innerHTML=pb.join("");$('payErr').textContent="";$('payModal').classList.add('on')}
 function closePay(){$('payModal').classList.remove('on')}
-function markPending(){try{localStorage.setItem('astro_pending',String(Date.now()))}catch(e){}}
+function markPending(){try{localStorage.setItem('astro_pending',JSON.stringify({t:Date.now(),k:payKey,v:curView}))}catch(e){}}
 function honorPaid(){const nm=($('payerIn').value||"").trim();if(!nm){$('payErr').textContent="입금자명을 적어주세요";return}
-  paid=true;try{localStorage.setItem('astro_paid','1');localStorage.removeItem('astro_pending')}catch(e){}
-  closePay();toast("🔓 감사합니다! 상세풀이가 모두 열렸어요");
-  const tab=(document.querySelector('#tabs button.on')||{}).dataset;renderChart();renderToday(dayOff);renderYear();
-  if($('compatOut').innerHTML)doCompat();if(tab)setTab(tab.t)}
-function copyLink(){const url=location.origin+location.pathname,t=`나는 ${C?SIGNS[S(C.sun)].n:"무슨 자리"}! 너의 별자리 차트도 봐봐 ✨ ${url}`;
-  if(navigator.share){navigator.share({title:"별자리 풀이",text:t}).catch(()=>{});return}
+  PAID[payKey]=1;try{localStorage.setItem('astro_paid2',JSON.stringify(PAID));localStorage.removeItem('astro_pending')}catch(e){}
+  closePay();toast(`🔓 감사합니다! '${IT[payKey].ko}' 풀이가 열렸어요`);rerender()}
+function share(){const url=location.origin+location.pathname,t=`나는 ${C?sn(S(C.sun)):"무슨 자리"}! 너의 출생 차트도 봐봐 ✦ ${url}`;
+  if(navigator.share){navigator.share({title:"아스트롤로지아",text:t}).catch(()=>{});return}
   if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>toast("링크를 복사했어요. 카톡에 붙여넣으세요"),()=>fb(t));else fb(t)}
 function fb(t){const ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast("링크를 복사했어요")}catch(e){}ta.remove()}
 
-/* 초기화: 저장된 입력 · 카카오페이 다녀온 뒤 복귀 */
-try{const u=JSON.parse(localStorage.getItem('astro_last')||"null");if(u&&u.y){fillForm(u);$('savedBtn').style.display='block';
-  const t=+localStorage.getItem('astro_pending')||0;if(t&&Date.now()-t<3600e3&&!paid){U=u;C=compute(u);render();go('s-res');openPay();toast("송금하셨다면 입금자명을 적고 눌러주세요")}}}catch(e){}
+/* ===== 시작 ===== */
+renderDeck();
+try{let u=JSON.parse(localStorage.getItem('astro_last')||"null");
+  if(u&&u.y){if(u.lat==null){const c=CITIES[u.ci]||CITIES[0];u.lat=c[1];u.lon=c[2];u.place=c[0];u.tz=null}
+    if(u.name==="나")u.name="당신";U=u;C=compute(u);fillForm(u);showProfile();
+    const p=JSON.parse(localStorage.getItem('astro_pending')||"null");
+    if(p&&p.t&&Date.now()-p.t<3600e3&&p.k&&!isPaid(p.k)){openView(p.v||p.k);openPay(p.k);toast("송금하셨다면 입금자명을 적고 눌러주세요")}}
+  else showForm()}catch(e){showForm()}
 </script>
 </body>
 </html>
