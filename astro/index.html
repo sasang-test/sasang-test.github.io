@@ -435,16 +435,18 @@ function openMap(){temp={lat:place.lat,lon:place.lon,name:place.name};$('mPick')
   skipRev=true;map.setView([place.lat,place.lon],inKorea(place.lat,place.lon)&&place.name!=="서울"?12:7,{animate:false});setTimeout(()=>map.invalidateSize(),80)}
 function closeMap(){$('mapModal').classList.remove('on');document.body.style.overflow=""}
 function confirmMap(){setPlace(temp.lat,temp.lon,temp.name);closeMap();toast("📍 "+temp.name+"(으)로 정했어요")}
+function placeName(d){const a=d.address||{},kr=a.country_code==="kr"||!a.country_code;
+  const nm=kr?[a.city||a.province||a.state,a.borough||a.county||a.town||a.city_district,a.suburb||a.quarter||a.village||a.neighbourhood]:[a.country,a.state,a.city||a.town||a.village];
+  const out=[...new Set(nm.filter(Boolean))];return out.length?out.join(" "):(d.display_name||"").split(", ").slice(0,2).reverse().join(" ")}
 function reverse(lat,lon){const my=++revT;
   fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=14&accept-language=ko&lat=${lat}&lon=${lon}`).then(r=>r.json()).then(d=>{if(my!==revT||!d)return;
-    const a=d.address||{},nm=[a.city||a.province||a.state||a.country,a.borough||a.county||a.town,a.suburb||a.quarter||a.village||a.neighbourhood].filter(Boolean);
-    const name=nm.length?[...new Set(nm)].join(" "):(d.display_name||"").split(", ").slice(0,2).reverse().join(" ");temp.name=name||"지도에서 고른 곳";$('mPick').textContent=temp.name}).catch(()=>{if(my===revT)$('mPick').textContent=temp.name})}
+    temp.name=placeName(d)||"지도에서 고른 곳";$('mPick').textContent=temp.name}).catch(()=>{if(my===revT)$('mPick').textContent=temp.name})}
 function searchPlace(){const q=($('placeQ').value||"").trim();if(!q)return;$('sres').innerHTML='<p class="hint">찾는 중…</p>';
-  fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&accept-language=ko&q=${encodeURIComponent(q)}`).then(r=>r.json()).then(list=>{
+  fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&addressdetails=1&accept-language=ko&q=${encodeURIComponent(q)}`).then(r=>r.json()).then(list=>{
     if(!list||!list.length){$('sres').innerHTML='<p class="hint">검색 결과가 없어요. 지도를 직접 눌러 주세요.</p>';return}
     window._sr=list;$('sres').innerHTML=list.map((x,i)=>`<button type="button" onclick="useRes(${i})">📍 ${esc(x.display_name)}</button>`).join("")
   }).catch(()=>{$('sres').innerHTML='<p class="hint">검색에 실패했어요. 지도를 직접 눌러 주세요.</p>'})}
-function useRes(i){const x=window._sr[i];temp={lat:+x.lat,lon:+x.lon,name:x.display_name.split(", ").slice(0,3).reverse().join(" ")};$('mPick').textContent=temp.name;$('sres').innerHTML="";
+function useRes(i){const x=window._sr[i];temp={lat:+x.lat,lon:+x.lon,name:placeName(x)};$('mPick').textContent=temp.name;$('sres').innerHTML="";
   if(map){skipRev=true;map.setView([temp.lat,temp.lon],13)}}
 
 /* ===== 프로필 ===== */
