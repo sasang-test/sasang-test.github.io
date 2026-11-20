@@ -337,6 +337,11 @@ details summary::after{content:" ▾";color:var(--muted)}
 </div>
 <div class="toast" id="toast"></div>
 
+<div id="errBox" style="display:none;position:fixed;left:10px;right:10px;bottom:10px;background:#b8322a;color:#fff;font-size:12px;line-height:1.5;padding:10px 12px;border-radius:10px;z-index:99;word-break:break-all"></div>
+<script>
+window.onerror=function(msg,src,line,col){try{var b=document.getElementById('errBox');b.style.display='block';b.textContent='오류: '+msg+' (줄 '+line+':'+col+') — 이 화면을 캡처해 주세요';}catch(e){}};
+window.addEventListener('unhandledrejection',function(e){try{window.onerror(String(e.reason),'',0,0)}catch(_){}});
+</script>
 <script>
 const PAGE_URL=location.origin+location.pathname;
 /* 카카오 공유 버튼: Kakao Developers에서 발급받은 JavaScript 키를 넣으면 켜집니다 */
@@ -533,7 +538,7 @@ function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remo
 document.querySelectorAll('.seg').forEach(seg=>seg.querySelectorAll('button').forEach(b=>b.onclick=()=>{
   seg.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');info[seg.dataset.k]=b.textContent;}));
 
-function startQuiz(){cur=0;ans.fill(null);renderQ();go('s-quiz')}
+function startQuiz(){finishing=false;cur=0;ans.fill(null);renderQ();go('s-quiz')}
 function renderQ(){
   const q=Q[cur];
   $('qcat').textContent=q.c;$('qcount').textContent=(cur+1)+" / "+Q.length;
@@ -550,23 +555,30 @@ function renderQ(){
 }
 function prevQ(){if(cur>0){cur--;renderQ()}}
 
+let finishing=false;
 function finish(){
+  if(finishing)return; finishing=true;
   $('qbar').style.width="100%";
   const s={TY:0,SY:0,TE:0,SE:0};
-  ans.forEach((a,i)=>{const w=Q[i].o[a][1];for(const k in w)s[k]+=w[k]});
-  s.TY*=1.1; // 태양인 문항은 점수가 덜 모이는 편이라 약간 보정
+  ans.forEach((a,i)=>{if(a==null||!Q[i].o[a])return;const w=Q[i].o[a][1];for(const k in w)s[k]+=w[k]});
+  s.TY*=1.1;
   const tot=Object.values(s).reduce((a,b)=>a+b,0)||1;
   const pct={};ORDER.forEach(k=>pct[k]=Math.round(s[k]/tot*100));
   const fix=100-ORDER.reduce((a,k)=>a+pct[k],0);
-  const ranked=[...ORDER].sort((a,b)=>s[b]-s[a]);pct[ranked[0]]+=fix;
-  R={pct,ranked,top:ranked[0],second:ranked[1],gap:pct[ranked[0]]-pct[ranked[1]],name:$('name').value.trim()};
+  const ranked=ORDER.slice().sort((a,b)=>s[b]-s[a]);pct[ranked[0]]+=fix;
+  R={pct,ranked,top:ranked[0],second:ranked[1],gap:pct[ranked[0]]-pct[ranked[1]],name:($('name').value||"").trim()};
   go('s-load');
-  const lis=[...document.querySelectorAll('#loadList li')];lis.forEach(l=>l.classList.remove('on'));
-  lis.forEach((l,i)=>setTimeout(()=>l.classList.add('on'),350+i*480));
-  setTimeout(showResult,350+lis.length*480+450);
+  const lis=Array.prototype.slice.call(document.querySelectorAll('#loadList li'));lis.forEach(l=>l.classList.remove('on'));
+  lis.forEach((l,i)=>setTimeout(()=>l.classList.add('on'),300+i*450));
+  setTimeout(safeShow,300+lis.length*450+400);
+}
+function safeShow(){
+  finishing=false;
+  try{showResult()}catch(e){go('s-result');window.onerror(e&&e.message?e.message:String(e),'',0,0)}
 }
 
 function showResult(){
+  go('s-result');
   const d=D[R.top],nm=R.name||"당신";
   const meta=[info.age,info.sex].filter(Boolean).join(" · ");
   $('rWho').textContent=nm+"님의 체질 풀이"+(meta?" ("+meta+")":"");
