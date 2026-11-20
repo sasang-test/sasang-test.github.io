@@ -384,8 +384,7 @@ details summary::after{content:" ▾";color:var(--muted)}
     <div class="desc-s">한 번 결제하면 이 기기에서 계속 볼 수 있어요.</div>
     <div class="step"><span class="n">1</span><div class="c"><b>990원을 보내주세요</b><br>버튼을 누르면 카카오페이가 열려요. 금액(990원)을 확인하고, 메모에 주문번호 <span class="order" id="orderNo"></span>을 적어주시면 좋아요.
       <div id="payBtns"></div></div></div>
-    <div class="step"><span class="n">2</span><div class="c"><b>송금 후 입금자명을 적고 눌러주세요</b>
-      <input type="text" id="payerIn" placeholder="입금자명" maxlength="10" autocomplete="off" style="margin-top:8px">
+    <div class="step"><span class="n">2</span><div class="c"><b>송금했으면 아래 버튼을 눌러주세요</b>
       <div class="err" id="payErr"></div>
       <button class="btn" id="paidBtn" onclick="honorPaid()">송금 완료 · 상세풀이 열기</button>
 </div></div>
@@ -625,7 +624,7 @@ function renderQ(){
       locked=true;ans[idx]=i;
       $('opts').querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');
       if(idx<Q.length-1){setTimeout(()=>{cur=idx+1;renderQ()},250)}
-      else{showFinishBtn();setTimeout(finish,400)}
+      else{setTimeout(finish,300)}
     };
     $('opts').appendChild(b);
   });
@@ -764,10 +763,8 @@ function openPay(){
 }
 const HC="WDRONC1MSFVY";
 async function honorPaid(){
-  const nm=($('payerIn').value||"").trim();
-  if(!nm){$('payErr').textContent="입금자명을 적어주세요";return}
   $('paidBtn').disabled=true;$('paidBtn').textContent="여는 중…";
-  try{await unlockWith(atob(HC));try{localStorage.setItem('sasang_payer',nm+" / "+orderNo)}catch(e){}clearPending();closePay();toast("🔓 감사합니다! 상세풀이가 열렸어요");if(R)showResult()}
+  try{await unlockWith(atob(HC));clearPending();closePay();toast("🔓 감사합니다! 상세풀이가 열렸어요");if(R)showResult()}
   catch(e){$('payErr').textContent="이 브라우저에서는 열 수 없어요. 크롬·사파리로 열어주세요"}
   $('paidBtn').disabled=false;$('paidBtn').textContent="송금 완료 · 상세풀이 열기";
 }
@@ -787,7 +784,7 @@ function saveResult(){try{localStorage.setItem('sasang_last',JSON.stringify({R:R
 function loadSaved(){try{const o=JSON.parse(localStorage.getItem('sasang_last'));if(o&&o.R&&D[o.R.top]){R=o.R;info=o.info||info;showResult()}}catch(e){}}
 function resumePending(){try{const t=+localStorage.getItem('sasang_pending')||0;if(!t||Date.now()-t>3600e3||P)return;
   const o=JSON.parse(localStorage.getItem('sasang_last')||"null");if(!o||!o.R||!D[o.R.top])return;
-  R=o.R;info=o.info||info;showResult();openPay();setTimeout(()=>{try{$('payerIn').focus()}catch(e){}},300);toast("송금하셨다면 입금자명을 적고 눌러주세요")}catch(e){}}
+  R=o.R;info=o.info||info;showResult();openPay();toast("송금하셨다면 '송금 완료'를 눌러주세요")}catch(e){}}
 function initSaved(){try{if(localStorage.getItem('sasang_last'))$('savedBtn').style.display='block';const c=localStorage.getItem('sasang_code');if(c)unlockWith(c).catch(()=>{})}catch(e){}}
 
 /* 궁합만 보기 */
