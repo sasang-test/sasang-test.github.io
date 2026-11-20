@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>사상체질 풀이 — 나는 어떤 체질일까</title>
+<meta name="description" content="22문항으로 알아보는 나의 사상체질. 몸 사용설명서와 체질 궁합까지 무료로 확인해 보세요.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sasang-test.github.io/">
+<meta property="og:title" content="사상체질 풀이 — 너는 무슨 체질이야?">
+<meta property="og:description" content="22문항으로 알아보는 나의 사상체질 · 몸 사용설명서 · 체질 궁합까지 무료">
+<meta property="og:image" content="https://sasang-test.github.io/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#16111c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16111c; --ink2:#241b2e; --gold:#d6a84f; --gold2:#f1d18a; --paper:#f6efe1; --paper2:#ece2cc;
+  --red:#b8322a; --text:#2b2320; --muted:#7a6d62;
+  --TY:#c2552d; --SY:#d18a1f; --TE:#4f7a3a; --SE:#3b5f8f;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ink);color:var(--text);font-family:'Gowun Dodum',sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100vh;background:radial-gradient(ellipse at 50% -10%,#3a2a4a 0%,transparent 60%),radial-gradient(circle at 10% 90%,#2a1c22 0%,transparent 40%),var(--ink)}
+.wrap{max-width:460px;margin:0 auto;padding:20px 18px 60px;min-height:100vh}
+.screen{display:none;animation:fade .5s ease}
+.screen.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+button{font-family:inherit}
+
+/* landing */
+.top-badge{display:inline-block;border:1px solid var(--gold);color:var(--gold2);font-size:12px;padding:4px 12px;border-radius:20px;letter-spacing:.08em}
+.hero{text-align:center;color:var(--paper);padding-top:18px}
+.hero h1{font-family:'Nanum Myeongjo',serif;font-weight:800;font-size:33px;line-height:1.3;margin:18px 0 10px}
+.hero h1 em{font-style:normal;color:var(--gold2)}
+.hero p.sub{color:#cbbfae;font-size:15px;line-height:1.7}
+.emblem{position:relative;width:250px;height:250px;margin:28px auto 22px}
+.emblem .ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(214,168,79,.5)}
+.emblem .ring.r2{inset:22px;border-style:dashed;border-color:rgba(214,168,79,.35);animation:spin 40s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.emblem .core{position:absolute;inset:70px;border-radius:50%;background:radial-gradient(circle,#3b2b48,#1d1524);border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;flex-direction:column;box-shadow:0 0 40px rgba(214,168,79,.25)}
+.emblem .core b{font-family:'Nanum Myeongjo',serif;font-size:30px;color:var(--gold2)}
+.emblem .core span{font-size:11px;color:#bba98a;letter-spacing:.2em;margin-top:2px}
+.emblem .q{position:absolute;width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;color:var(--paper);font-size:24px;border:1.5px solid rgba(255,255,255,.25)}
+.emblem .q small{font-size:10.5px;margin-top:1px}
+.q1{top:-6px;left:93px;background:var(--TY)} .q2{top:93px;right:-6px;background:var(--SY)}
+.q3{bottom:-6px;left:93px;background:var(--TE)} .q4{top:93px;left:-6px;background:var(--SE)}
+.price{margin:6px auto 18px;display:flex;align-items:center;justify-content:center;gap:10px;color:var(--paper)}
+.price s{color:#8d8070;font-size:17px}
+.price b{font-size:26px;color:var(--gold2);font-family:'Nanum Myeongjo',serif}
+.price .tag{background:var(--red);color:#fff;font-size:12px;padding:3px 8px;border-radius:4px}
+.btn{display:block;width:100%;border:0;cursor:pointer;font-family:'Nanum Myeongjo',serif;font-weight:800;font-size:18px;padding:18px;border-radius:14px;background:linear-gradient(180deg,#e8c172,#c8953a);color:#2a1a08;box-shadow:0 6px 0 #8a6224,0 10px 24px rgba(0,0,0,.4);transition:transform .1s}
+.btn:active{transform:translateY(3px);box-shadow:0 3px 0 #8a6224}
+.btn.ghost{background:transparent;color:var(--gold2);border:1.5px solid var(--gold);box-shadow:none;font-size:16px;padding:14px}
+.btn.kakao{background:#fee500;color:#191600;box-shadow:0 5px 0 #b8a500;font-family:'Gowun Dodum';font-weight:700;font-size:16px}
+.btn.dark{background:var(--ink2);color:var(--gold2);box-shadow:none;font-size:16px;font-family:'Gowun Dodum';padding:15px}
+.mt10{margin-top:10px}
+.feat{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:26px 0 8px}
+.feat div{background:rgba(255,255,255,.04);border:1px solid rgba(214,168,79,.2);border-radius:12px;padding:12px 6px;text-align:center;color:#d8ccb8;font-size:12px;line-height:1.5}
+.feat div b{display:block;color:var(--gold2);font-size:20px;margin-bottom:2px}
+.foot{color:#7f7465;font-size:11.5px;line-height:1.7;text-align:center;margin-top:22px}
+
+/* paper */
+.paper{background:var(--paper);border-radius:18px;padding:24px 20px;position:relative;box-shadow:0 20px 50px rgba(0,0,0,.45);
+  background-image:repeating-linear-gradient(0deg,rgba(120,90,40,.025) 0 2px,transparent 2px 5px),linear-gradient(var(--paper),var(--paper2))}
+.paper::before{content:"";position:absolute;inset:8px;border:1px solid rgba(160,120,60,.3);border-radius:12px;pointer-events:none}
+.label{font-size:13px;color:var(--muted);margin-bottom:8px;display:block}
+.field{margin-bottom:20px}
+input[type=text]{width:100%;padding:14px;border-radius:10px;border:1.5px solid #d4c4a4;background:#fffaf0;font-family:inherit;font-size:16px;color:var(--text);outline:none}
+input[type=text]:focus{border-color:var(--gold)}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg button{flex:1;min-width:64px;padding:12px 6px;border-radius:10px;border:1.5px solid #d4c4a4;background:#fffaf0;font-size:15px;color:var(--text);cursor:pointer}
+.seg button.sel{background:var(--ink2);color:var(--gold2);border-color:var(--ink2)}
+.title-s{font-family:'Nanum Myeongjo',serif;font-weight:800;font-size:22px;color:var(--ink);margin-bottom:6px}
+.desc-s{font-size:14px;color:var(--muted);margin-bottom:22px;line-height:1.6}
+
+/* quiz */
+.qhead{display:flex;justify-content:space-between;align-items:center;color:#cbbfae;font-size:13px;margin-bottom:10px}
+.qhead .cat{color:var(--gold2);border:1px solid rgba(214,168,79,.5);padding:3px 10px;border-radius:20px}
+.bar{height:6px;background:rgba(255,255,255,.1);border-radius:6px;overflow:hidden;margin-bottom:18px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width .4s}
+.qnum{color:var(--red);font-weight:700;font-size:14px;letter-spacing:.05em}
+.qtext{font-family:'Nanum Myeongjo',serif;font-weight:800;font-size:21px;line-height:1.45;color:var(--ink);margin:8px 0 20px;word-break:keep-all}
+.opt{display:block;width:100%;text-align:left;padding:15px 16px;margin-bottom:10px;border-radius:12px;border:1.5px solid #d9caa9;background:#fffaf0;font-size:15px;line-height:1.5;color:var(--text);cursor:pointer;transition:all .15s;word-break:keep-all}
+.opt:hover{border-color:var(--gold)}
+.opt.sel{background:var(--ink2);color:var(--paper);border-color:var(--ink2)}
+.qnav{display:flex;justify-content:space-between;margin-top:8px}
+.qnav button{background:none;border:0;color:var(--muted);font-size:14px;cursor:pointer;padding:6px}
+
+/* loading */
+.loading{text-align:center;color:var(--paper);padding-top:80px}
+.yy{width:110px;height:110px;margin:0 auto 30px;border-radius:50%;animation:spin 2.4s linear infinite;
+  background:radial-gradient(circle at 50% 25%,var(--paper) 0 9px,transparent 10px),radial-gradient(circle at 50% 75%,var(--ink) 0 9px,transparent 10px),
+  radial-gradient(circle at 50% 25%,var(--ink) 0 27px,transparent 28px),radial-gradient(circle at 50% 75%,var(--paper) 0 27px,transparent 28px),
+  linear-gradient(90deg,var(--paper) 50%,var(--ink) 50%);box-shadow:0 0 0 3px var(--gold),0 0 40px rgba(214,168,79,.4)}
+.loading h2{font-family:'Nanum Myeongjo',serif;font-size:22px;margin-bottom:14px}
+.loading ul{list-style:none;color:#bfb2a0;font-size:14px;line-height:2.2}
+.loading li{opacity:.25;transition:opacity .4s}
+.loading li.on{opacity:1;color:var(--gold2)}
+
+/* result */
+.res-top{text-align:center;color:var(--paper);margin-bottom:18px}
+.res-top .who{font-size:15px;color:#cbbfae}
+.big{position:relative;margin:16px auto 6px;width:170px;height:170px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;border:2px solid var(--gold);background:radial-gradient(circle,#33263f,#1a1320)}
+.big .emo{font-size:62px;line-height:1}
+.big .kr{font-family:'Nanum Myeongjo',serif;font-weight:800;font-size:22px;color:var(--gold2);margin-top:8px}
+.res-top .nick{display:inline-block;margin-top:14px;background:var(--gold2);color:var(--ink);font-weight:700;padding:5px 14px;border-radius:20px;font-size:14px}
+.res-top h2{font-family:'Nanum Myeongjo',serif;font-size:25px;margin-top:10px;line-height:1.4;word-break:keep-all}
+.res-top h2 em{font-style:normal;color:var(--gold2)}
+.res-top .one{color:#d9cdb9;font-size:15px;margin-top:8px;line-height:1.6;word-break:keep-all}
+.tags{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:12px}
+.tags span{font-size:13px;color:var(--gold2);border:1px solid rgba(214,168,79,.45);border-radius:20px;padding:3px 10px}
+.sec{margin-bottom:14px}
+.sec h3{font-family:'Nanum Myeongjo',serif;font-weight:800;font-size:18px;color:var(--ink);margin-bottom:12px}
+.sec p{font-size:15px;line-height:1.8;word-break:keep-all}
+.meter{margin-bottom:10px}
+.meter .row{display:flex;justify-content:space-between;font-size:14.5px;margin-bottom:4px}
+.meter .trk{height:10px;background:#e2d6bd;border-radius:6px;overflow:hidden}
+.meter .trk i{display:block;height:100%;border-radius:6px;width:0;transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+ul.dots{list-style:none} ul.dots li{position:relative;padding-left:18px;font-size:15px;line-height:1.75;margin-bottom:6px;word-break:keep-all}
+ul.dots li::before{content:"✓";position:absolute;left:0;color:var(--red);font-weight:700;font-size:13px;top:2px}
+.look{display:grid;gap:8px}
+.look div{background:#fffaf0;border:1px solid #e0d2b4;border-radius:12px;padding:11px 13px;font-size:14.5px;line-height:1.6;word-break:keep-all}
+.look b{display:block;font-size:12.5px;color:var(--muted);font-weight:400;margin-bottom:2px}
+.sig{border-radius:12px;padding:13px 14px;margin-bottom:8px;font-size:14.5px;line-height:1.65;word-break:keep-all}
+.sig b{display:block;font-size:13px;margin-bottom:3px}
+.sig.g{background:#e3eedb;color:#2d4a20} .sig.r{background:#f5e1dc;color:#6e2a22} .sig.y{background:#f6ecd0;color:#5e4614}
+.sig ul{padding-left:18px}
+.foodgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.foodgrid > div{background:#fffaf0;border:1px solid #e0d2b4;border-radius:12px;padding:12px}
+.foodgrid h4{font-size:14px;margin-bottom:8px}
+.foodgrid ul{list-style:none;font-size:14px;line-height:1.85}
+.compat-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px dashed #d9caa9;cursor:pointer}
+.compat-row:last-child{border-bottom:0}
+.compat-row .e{font-size:26px;width:34px;text-align:center}
+.compat-row .t{flex:1;font-size:14.5px;line-height:1.4}
+.compat-row .t small{display:block;color:var(--muted);font-size:12.5px}
+.compat-row .s{font-family:'Nanum Myeongjo',serif;font-weight:800;font-size:18px}
+.hearts{color:var(--red);letter-spacing:1px;font-size:13px}
+.ccard{background:var(--ink2);color:var(--paper);border-radius:16px;padding:20px;text-align:center;margin-bottom:12px}
+.ccard .pair{display:flex;align-items:center;justify-content:center;gap:12px;font-size:44px}
+.ccard .pair span{font-size:22px;color:var(--gold2)}
+.ccard .names{font-size:13.5px;color:#cbbfae;margin-top:6px}
+.ccard .score{font-family:'Nanum Myeongjo',serif;font-weight:800;font-size:44px;color:var(--gold2);margin-top:8px}
+.ccard .ctitle{font-weight:700;font-size:17px;margin-top:2px}
+.ccard p{font-size:14.5px;line-height:1.7;margin-top:10px;color:#e4d9c7;word-break:keep-all;text-align:left}
+.ccard .tip{margin-top:12px;background:rgba(241,209,138,.12);border-radius:10px;padding:10px 12px;font-size:14px;text-align:left;color:var(--gold2);line-height:1.6}
+details{background:#fffaf0;border:1px solid #e0d2b4;border-radius:12px;padding:12px 14px}
+details summary{cursor:pointer;font-size:14.5px;font-weight:700;color:var(--ink);list-style:none}
+details summary::after{content:" ▾";color:var(--muted)}
+.kv{display:grid;grid-template-columns:80px 1fr;gap:9px 10px;font-size:13.5px;line-height:1.6;margin-top:12px}
+.kv dt{color:var(--muted)} .kv dd{word-break:keep-all}
+.note{background:rgba(184,50,42,.07);border:1px dashed rgba(184,50,42,.4);border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.7;color:#6b3a33}
+.actions{display:grid;gap:12px;margin-top:20px}
+.share-box{background:rgba(255,255,255,.05);border:1px solid rgba(214,168,79,.3);border-radius:16px;padding:18px;color:var(--paper);margin-top:16px}
+.share-box h3{font-family:'Nanum Myeongjo',serif;font-size:18px;margin-bottom:6px;color:var(--gold2)}
+.share-box p{font-size:13.5px;color:#cbbfae;line-height:1.6;margin-bottom:12px}
+#cardWrap{display:none;text-align:center;margin-top:14px}
+#cardWrap img{width:100%;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+#cardWrap small{display:block;color:var(--gold2);font-size:13px;margin-top:8px}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);background:var(--gold2);color:var(--ink);padding:10px 18px;border-radius:30px;font-size:14px;opacity:0;transition:all .3s;pointer-events:none;z-index:9;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.picker{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+.picker button{border:1.5px solid #d4c4a4;background:#fffaf0;border-radius:12px;padding:10px 2px;font-size:13px;cursor:pointer;line-height:1.5}
+.picker button span{display:block;font-size:24px}
+.picker button.sel{background:var(--ink2);color:var(--gold2);border-color:var(--ink2)}
+.friend-banner{background:linear-gradient(135deg,#3a2a4a,#241b2e);border:1px solid var(--gold);border-radius:16px;padding:16px;color:var(--paper);text-align:center;margin-bottom:16px;font-size:14.5px;line-height:1.6}
+.friend-banner b{color:var(--gold2)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- LANDING -->
+<section id="s-home" class="screen on">
+  <div class="hero">
+    <div id="friendBanner"></div>
+    <span class="top-badge">이제마의 사상의학으로 보는</span>
+    <h1>타고난 몸과 마음,<br><em>사상체질</em>로 풀어드려요</h1>
+    <p class="sub">체형·성격·생활습관 22문항으로<br>내 체질과 몸 사용설명서, 궁합까지</p>
+    <div class="emblem">
+      <div class="ring"></div><div class="ring r2"></div>
+      <div class="q q1">🦅<small>태양인</small></div>
+      <div class="q q2">⚡<small>소양인</small></div>
+      <div class="q q3">🐻<small>태음인</small></div>
+      <div class="q q4">🌙<small>소음인</small></div>
+      <div class="core"><b>四象</b><span>네 가지 체질</span></div>
+    </div>
+    <div class="price"><s>990원</s><b>0원</b><span class="tag">전체 무료</span></div>
+    <button class="btn" onclick="go('s-info')">내 체질 풀이 보기</button>
+    <button class="btn ghost mt10" onclick="openCompatPicker()">💞 체질 궁합만 보기</button>
+    <div class="feat">
+      <div><b>22</b>문항<br>약 3분</div>
+      <div><b>📖</b>몸 사용<br>설명서</div>
+      <div><b>💞</b>친구·연인<br>체질 궁합</div>
+    </div>
+    <p class="foot">사상체질 진단 요소(체형·용모·말투·성격·평소 몸 상태)를 바탕으로 만든 자가 점검용 풀이예요.<br>정확한 체질 감별은 한의사의 진찰로 이뤄져요.</p>
+  </div>
+</section>
+
+<!-- INFO -->
+<section id="s-info" class="screen">
+  <div class="paper">
+    <div class="title-s">풀이 받을 분의 정보</div>
+    <div class="desc-s">결과지와 공유 카드에 표시돼요. 어디에도 저장되지 않아요.</div>
+    <div class="field"><span class="label">이름 또는 별명</span><input type="text" id="name" maxlength="8" placeholder="예) 홍길동"></div>
+    <div class="field"><span class="label">성별</span><div class="seg" data-k="sex"><button>여성</button><button>남성</button></div></div>
+    <div class="field"><span class="label">나이대</span><div class="seg" data-k="age"><button>10대</button><button>20대</button><button>30대</button><button>40대</button><button>50대+</button></div></div>
+    <button class="btn" onclick="startQuiz()">문진 시작하기</button>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="s-quiz" class="screen">
+  <div class="qhead"><span class="cat" id="qcat"></span><span id="qcount"></span></div>
+  <div class="bar"><i id="qbar"></i></div>
+  <div class="paper">
+    <div class="qnum" id="qnum"></div>
+    <div class="qtext" id="qtext"></div>
+    <div id="opts"></div>
+    <div class="qnav"><button id="prevBtn" onclick="prevQ()">← 이전 문항</button><button onclick="go('s-home')">처음으로</button></div>
+  </div>
+</section>
+
+<!-- LOADING -->
+<section id="s-load" class="screen">
+  <div class="loading">
+    <div class="yy"></div>
+    <h2>체질을 풀이하는 중</h2>
+    <ul id="loadList">
+      <li>타고난 체형을 살피는 중…</li>
+      <li>얼굴과 목소리의 기운을 읽는 중…</li>
+      <li>성격의 기울기를 재는 중…</li>
+      <li>평소 몸 상태를 따져보는 중…</li>
+      <li>몸 사용설명서를 쓰는 중…</li>
+    </ul>
+  </div>
+</section>
+
+<!-- RESULT -->
+<section id="s-result" class="screen">
+  <div class="res-top">
+    <div class="who" id="rWho"></div>
+    <div class="big"><span class="emo" id="rEmo"></span><span class="kr" id="rKr"></span></div>
+    <span class="nick" id="rNick"></span>
+    <h2 id="rTitle"></h2>
+    <p class="one" id="rOne"></p>
+    <div class="tags" id="rTags"></div>
+  </div>
+
+  <div id="rFriendCompat"></div>
+
+  <div class="paper sec">
+    <h3>📊 내 안의 네 가지 체질 비율</h3>
+    <div id="rMeters"></div>
+    <p id="rClarity" style="font-size:13.5px;color:var(--muted);margin-top:8px;line-height:1.6"></p>
+  </div>
+
+  <div class="paper sec">
+    <h3>🙋 이런 사람이에요</h3>
+    <ul class="dots" id="rMind"></ul>
+  </div>
+
+  <div class="paper sec">
+    <h3>👀 겉으로 보이는 특징</h3>
+    <div class="look" id="rLook"></div>
+  </div>
+
+  <div class="paper sec">
+    <h3>📖 내 몸 사용설명서</h3>
+    <div class="sig g" id="rGood"></div>
+    <div class="sig r" id="rBad"></div>
+    <div class="sig y" id="rStress"></div>
+  </div>
+
+  <div class="paper sec">
+    <h3>🍚 나에게 맞는 밥상</h3>
+    <div class="foodgrid">
+      <div><h4>👍 잘 맞는 음식</h4><ul id="rFood"></ul></div>
+      <div><h4>👎 조심할 음식</h4><ul id="rAvoid"></ul></div>
+    </div>
+  </div>
+
+  <div class="paper sec">
+    <h3>🌿 생활 꿀팁</h3>
+    <ul class="dots" id="rLife"></ul>
+  </div>
+
+  <div class="paper sec">
+    <h3>💞 체질 궁합</h3>
+    <p style="font-size:13.5px;color:var(--muted);margin-bottom:6px">누르면 자세한 궁합 풀이가 열려요</p>
+    <div id="rCompatList"></div>
+    <div id="rCompatDetail" style="margin-top:12px"></div>
+  </div>
+
+  <div class="paper sec">
+    <details>
+      <summary>🔎 한의학으로 더 깊이 보기</summary>
+      <dl class="kv" id="rDeep"></dl>
+    </details>
+  </div>
+
+  <div class="paper sec">
+    <div class="note">설문 답변만으로 본 <b>자가 점검 결과</b>예요. 실제 체질은 체형·얼굴·성격·평소 몸 상태를 종합해 한의사가 판단하고, 치료 반응까지 보고 확정해요. 한약을 먹거나 식단을 크게 바꾸기 전에는 꼭 한의원에서 상담하세요.</div>
+  </div>
+
+  <div class="share-box">
+    <h3>카톡으로 공유하기</h3>
+    <p>친구가 링크를 열면 내 결과를 보고, 테스트를 마치면 <b style="color:var(--gold2)">우리 둘의 궁합</b>이 바로 나와요.</p>
+    <button class="btn kakao" id="kakaoBtn" style="display:none" onclick="kakaoShare()">💬 카카오톡으로 공유하기</button>
+    <button class="btn kakao mt10" onclick="copyLink()">🔗 결과 링크 복사 → 카톡에 붙여넣기</button>
+    <button class="btn dark mt10" onclick="makeCard()">🖼 결과 카드 이미지 만들기</button>
+    <div id="cardWrap"><img id="cardImg" alt="사상체질 결과 카드"><small>이미지를 꾹 눌러 저장하거나 아래 버튼을 눌러주세요</small>
+      <button class="btn dark mt10" id="imgShareBtn" style="display:none" onclick="shareImage()">📤 이미지 바로 보내기</button>
+      <a class="btn dark mt10" id="imgSaveBtn" download="사상체질_결과.png" style="text-decoration:none">💾 이미지 저장</a></div>
+  </div>
+
+  <div class="actions">
+    <button class="btn ghost" onclick="restart()">다시 풀이 받기</button>
+  </div>
+</section>
+
+<!-- COMPAT PICKER -->
+<section id="s-compat" class="screen">
+  <div class="paper">
+    <div class="title-s">💞 체질 궁합 보기</div>
+    <div class="desc-s">이미 체질을 알고 있다면 골라주세요. 모르면 테스트부터 해보세요!</div>
+    <span class="label">나의 체질</span><div class="picker" id="pickA"></div>
+    <span class="label">상대의 체질</span><div class="picker" id="pickB"></div>
+    <div id="compatOut"></div>
+    <button class="btn ghost mt10" style="color:var(--ink);border-color:#c9b48a" onclick="go('s-home')">처음으로</button>
+  </div>
+</section>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const PAGE_URL=location.origin+location.pathname;
+/* 카카오 공유 버튼: Kakao Developers에서 발급받은 JavaScript 키를 넣으면 켜집니다 */
+const KAKAO_KEY="";
+const OG_IMAGE="https://sasang-test.github.io/og.png";
+if(KAKAO_KEY){const k=document.createElement('script');k.src="https://t1.kakaocdn.net/kakao_js_sdk/2.8.2/kakao.min.js";
+  k.integrity="sha384-zt/G7/KfaRQ9dT/QIkS0ujMtzouJqzuSJcXVQu50x0rl/+mD1dc70AeOejVbMD9E";k.crossOrigin="anonymous";
+  k.onload=()=>{try{Kakao.init(KAKAO_KEY);document.getElementById('kakaoBtn').style.display='block'}catch(e){}};document.head.appendChild(k)}
+/* 점수 키: TY 태양 · SY 소양 · TE 태음 · SE 소음 */
+const Q=[
+ {c:"체형",q:"거울 앞에 선 내 몸, 어디가 가장 발달했나요?",o:[
+  ["머리가 크고 목덜미가 굵다. 어깨는 벌어졌는데 허리·다리는 가늘다",{TY:3}],
+  ["가슴이 넓고 근육이 잘 붙는다. 골반·엉덩이는 작은 편이다",{SY:3}],
+  ["배와 허리가 두툼하다. 뼈가 굵고 목은 짧은 편이다",{TE:3}],
+  ["가슴은 좁고 골반·엉덩이가 발달했다. 상체보다 하체가 굵다",{SE:3}]]},
+ {c:"체형",q:"전체적인 체격과 살은?",o:[
+  ["체격이 크고 살이 쉽게 찐다. 한번 찌면 잘 안 빠진다",{TE:3}],
+  ["작고 마른 편이다. 뼈가 가늘다",{SE:3}],
+  ["군살 없이 탄탄하고 날렵해 보인다",{SY:2}],
+  ["대체로 마른 편이지만 살에 비해 뼈대가 굵다",{TY:2}]]},
+ {c:"체형",q:"평소 자세와 걸음걸이는?",o:[
+  ["빠르게 걷고 몸을 좀 흔들며 가볍게 걷는다",{SY:2}],
+  ["느릿하고 무게감 있게 걷는다",{TE:2}],
+  ["얌전하게 걷는다. 어깨를 움츠리고 구부정할 때가 많다",{SE:2}],
+  ["허리를 펴고 고개를 꼿꼿이 든 채 당당하게 걷는다",{TY:2}]]},
+ {c:"얼굴",q:"내 얼굴형과 인상에 가까운 것은?",o:[
+  ["역삼각형에 턱이 뾰족하다. 야무지고 날렵한 인상",{SY:2}],
+  ["둥글고 넓은 얼굴, 이목구비가 큼직하다. 점잖고 후덕한 인상",{TE:2}],
+  ["갸름한 계란형이나 긴 얼굴, 이목구비가 오밀조밀하다. 순한 인상",{SE:2}],
+  ["이마가 넓고 귀가 크다. 강하고 뚜렷한 인상",{TY:2}]]},
+ {c:"얼굴",q:"눈매는 어떤가요?",o:[
+  ["가늘고 길며 눈꼬리가 올라갔다. 눈빛이 날카롭다",{SY:2}],
+  ["눈이 크지만 눈빛이 순하고 부드럽다",{TE:2}],
+  ["눈꼬리가 수평이거나 살짝 처진다. 순한 눈매",{SE:2}],
+  ["눈빛이 반짝이며 강하다. 눈꼬리가 약간 올라갔다",{TY:2}]]},
+ {c:"말투",q:"내 목소리와 말투는?",o:[
+  ["톤이 높고 말이 빠르다. 말이 많은 편이다",{SY:2}],
+  ["목소리가 굵고 낮다. 말이 느리고 적은 편이다",{TE:2}],
+  ["목소리가 작고 가늘다. 차분하게 천천히 말한다",{SE:2}],
+  ["목소리가 크고 맑아 멀리까지 잘 들린다",{TY:2}]]},
+ {c:"성격",q:"평소 나의 기본 성향은?",o:[
+  ["물러서기 싫다. 무슨 일이든 앞으로 밀고 나간다",{TY:2}],
+  ["가만히 있기 싫다. 일을 자꾸 벌이고 남의 일에도 열심이다",{SY:2}],
+  ["변화보다 안정이 좋다. 익숙한 게 편하고 속내를 잘 안 드러낸다",{TE:2}],
+  ["나서기보다 조용히 혼자 준비한다. 안정적인 게 좋다",{SE:2}]]},
+ {c:"성격",q:"처음 보는 사람들 사이에서 나는?",o:[
+  ["어색함 없이 바로 대화를 주도한다",{TY:2}],
+  ["먼저 말을 걸고 분위기를 띄운다",{SY:2}],
+  ["말수는 적지만 무던하게 잘 어울린다",{TE:2}],
+  ["낯을 가려서 친해지는 데 시간이 걸린다",{SE:2}]]},
+ {c:"성격",q:"내가 가장 자신 있는 능력은?",o:[
+  ["누구와도 금방 통하는 소통력, 맺고 끊는 결단력",{TY:2}],
+  ["시원시원한 일 처리와 밀어붙이는 용기",{SY:2}],
+  ["맡은 일은 끝까지 해내는 끈기",{TE:2}],
+  ["빈틈없는 꼼꼼함과 신중함",{SE:2}]]},
+ {c:"성격",q:"솔직히 자주 드는 마음은?",o:[
+  ["늘 마음이 급하다. 빨리빨리 해치우고 싶다",{TY:3}],
+  ["일을 벌여놓고 마무리를 못 할까 봐 조마조마하다",{SY:3}],
+  ["새로운 환경이나 낯선 일이 겁나고 피하고 싶다",{TE:3}],
+  ["별일 없어도 괜히 불안하고 걱정이 많다",{SE:3}]]},
+ {c:"성격",q:"화가 나거나 서운할 때 나는?",o:[
+  ["순간 확 치밀어 올라 참기 어렵다",{TY:2}],
+  ["바로 말하고 뒤끝 없이 금방 풀린다",{SY:2}],
+  ["겉으로 드러내지 않고 꾹 참는다",{TE:2}],
+  ["말은 안 해도 마음에 오래 남아 곱씹는다",{SE:2}]]},
+ {c:"성격",q:"모임이나 팀플에서 내 역할은?",o:[
+  ["방향을 정하고 앞에서 끌고 가는 리더",{TY:2}],
+  ["일을 빠르게 쳐내는 행동대장",{SY:2}],
+  ["묵묵히 맡은 걸 끝까지 해내는 버팀목",{TE:2}],
+  ["자료 정리하고 빠진 걸 챙기는 꼼꼼이",{SE:2}]]},
+ {c:"몸 상태",q:"긴장하거나 초조할 때 몸에서 생기는 반응은?",o:[
+  ["잠이 안 온다. 마음이 급해 잠을 설친다",{TY:2}],
+  ["허둥지둥하다 일의 순서를 잊어버린다",{SY:3}],
+  ["가슴이 두근거리고 식은땀이 난다",{TE:3}],
+  ["온몸에 힘이 쭉 빠진다",{SE:3}]]},
+ {c:"몸 상태",q:"땀을 흘리고 나면?",o:[
+  ["땀이 많은 편이고, 흘리고 나면 오히려 개운하다",{TE:3}],
+  ["원래 땀이 적다. 많이 흘리면 기운이 빠지고 피곤하다",{SE:3}],
+  ["땀은 보통이고 흘려도 컨디션에 큰 차이가 없다",{SY:1,TY:1}]]},
+ {c:"몸 상태",q:"밥 먹는 스타일은?",o:[
+  ["식욕이 좋고 많이 먹는다. 아플 때도 입맛은 있다",{TE:3}],
+  ["빨리 먹는다. 소나기 밥처럼 후다닥 먹는 편",{SY:3}],
+  ["양이 적다. 조금만 과식해도 체하고, 대신 간식을 자주 먹는다",{SE:3}],
+  ["가끔 음식이 잘 안 넘어가거나 입에 침이 고인다",{TY:3}]]},
+ {c:"몸 상태",q:"화장실 사정, 언제 더 괴로운가요?",o:[
+  ["변비 — 하루만 못 봐도 가슴이 답답하고 열이 오른다",{SY:3}],
+  ["설사 — 배가 차고 묽은 변을 보면 힘이 쭉 빠진다",{SE:3}],
+  ["변비였다 설사였다 왔다 갔다 하는데 크게 신경 안 쓴다",{TE:2}],
+  ["대변보다 소변이 시원하게 안 나올 때가 더 불편하다",{TY:3}]]},
+ {c:"몸 상태",q:"더위와 추위, 무엇이 더 힘든가요?",o:[
+  ["더위 — 몸에 열이 많고 찬 게 좋다",{SY:3}],
+  ["추위 — 손발과 배가 차고 따뜻한 게 좋다",{SE:3}],
+  ["더위를 좀 타지만 땀으로 풀린다",{TE:2}],
+  ["딱히 둘 다 상관없다",{TY:1}]]},
+ {c:"몸 상태",q:"물 마시는 습관은?",o:[
+  ["찬물을 자주 벌컥벌컥 마신다",{SY:2}],
+  ["물을 잘 마시고 양도 많다. 온도는 상관없다",{TE:2}],
+  ["물을 적게 마시고, 마시면 따뜻한 물",{SE:3}],
+  ["잘 신경 쓰지 않는다",{TY:1}]]},
+ {c:"몸 상태",q:"잠과 피로는?",o:[
+  ["잠을 충분히 못 자면 하루 종일 지친다",{SE:2}],
+  ["적게 자도 꽤 잘 버틴다",{TE:2}],
+  ["스트레스를 쉽게 받지만 금방 털고 잔다",{SY:2}],
+  ["잠을 자주 설치는 편이다",{TY:2}]]},
+ {c:"몸 상태",q:"자주 겪는 불편함은?",o:[
+  ["오래 걸으면 다리가 쉽게 피곤하다",{TY:3}],
+  ["얼굴로 열이 오르고 입이 마른다",{SY:2}],
+  ["헛배가 부르고 숨이 차거나 몸이 붓는다",{TE:2}],
+  ["소화가 안 되고 아랫배가 차다",{SE:2}]]},
+ {c:"몸 상태",q:"몸이 가장 가볍고 상쾌한 순간은?",o:[
+  ["소변을 시원하게 봤을 때",{TY:3}],
+  ["대변을 시원하게 봤을 때",{SY:3}],
+  ["땀을 흠뻑 흘린 뒤",{TE:3}],
+  ["밥이 술술 잘 소화됐을 때",{SE:3}]]},
+ {c:"몸 상태",q:"술을 마시면?",o:[
+  ["잘 마시고 꽤 버틴다",{TE:2}],
+  ["금방 얼굴이 빨개지고 열이 오른다",{SY:2}],
+  ["조금만 마셔도 속이 불편하다",{SE:2}],
+  ["그날그날 다르다",{TY:1}]]}
+];
+
+const D={
+TY:{kr:"태양인",hz:"太陽人",emo:"🦅",color:"#c2552d",nick:"거침없는 개척자",
+ one:"높이 나는 독수리처럼, 남들이 못 본 길을 먼저 여는 사람",
+ tags:["#리더십","#추진력","#결단력","#급한성격"],
+ mind:["무슨 일이든 물러서지 않고 앞으로 밀고 나가요.","처음 보는 사람과도 금방 통하고, 자연스럽게 모임을 이끌어요.","관계보다 목표가 중요하고, 맺고 끊는 게 분명해요.","창의적인 아이디어가 많고 판을 크게 봐요.","다만 마음이 늘 급하고, 뜻대로 안 되면 화가 확 치밀어요."],
+ look:[["체형","머리가 크고 목이 굵고 길어요. 어깨는 벌어졌지만 허리와 다리는 상대적으로 가늘어요."],["얼굴","이마가 넓고 귀가 커요. 눈빛이 반짝이고 강한 인상이에요."],["말투","목소리가 크고 맑아서 멀리까지 잘 들려요."]],
+ good:"소변이 시원하게 잘 나오면 몸이 가볍고 컨디션이 좋다는 뜻이에요.",
+ bad:["음식이 잘 안 넘어가거나 입에 침이 자꾸 고일 때","오래 걷기 힘들 만큼 다리에 힘이 빠질 때","소변이 시원하지 않고 양이 줄 때"],
+ stress:"긴장하면 마음이 급해지고 잠을 설쳐요. 그럴수록 한 박자 쉬어 가세요.",
+ food:["🦐 새우·조개·굴","🐙 문어·오징어","🌾 메밀(냉면·소바)","🍇 포도·머루·다래","🥬 담백한 채소"],
+ avoid:["🌶 맵고 자극적인 음식","🥩 기름진 고기","🍟 고열량 음식","🍺 잦은 술자리"],
+ life:["화가 날 땐 바로 행동하지 말고 하루 묵혀 보세요.","하체를 키우는 걷기·스쿼트가 잘 맞아요.","일정을 몰아치기보다 쉬는 틈을 꼭 끼워 넣으세요.","담백하고 시원한 음식 위주로 드세요."],
+ deep:[["장부","폐대간소(肺大肝小) — 폐의 기운이 크고 간의 기운이 작음"],["성정","애성원산(哀性遠散) · 노정촉급(怒情促急)"],["성질재간","장어소통(長於疏通) · 능어교우(能於交遇)"],["항심","급박지심(急迫之心)"],["건강 지표","소변왕다즉완실무병(小便旺多則完實而無病)"],["주의 병증","열격(噎膈), 해역(解㑊)"],["대표 처방","오가피장척탕, 미후등식장탕"]]},
+SY:{kr:"소양인",hz:"少陽人",emo:"⚡",color:"#d18a1f",nick:"번개 같은 해결사",
+ one:"번개처럼 빠르고 뜨겁게, 남의 일에도 발 벗고 나서는 사람",
+ tags:["#행동대장","#의리파","#뒤끝없음","#열많음"],
+ mind:["가만히 있질 못해요. 일을 벌이고 남의 일에도 열심이에요.","시원시원하게 일을 처리하고, 결과와 속도를 중요하게 여겨요.","용감하고 자기 주장이 뚜렷해요.","화가 나도 금방 풀리는 뒤끝 없는 스타일이에요.","다만 일을 벌여놓고 마무리가 약한 편이에요."],
+ look:[["체형","가슴이 넓고 근육이 잘 붙어요. 골반과 엉덩이는 작고 다리가 가는 편이에요."],["얼굴","역삼각형에 턱이 뾰족하고, 눈꼬리가 올라간 날카로운 눈매예요. 입술이 얇아요."],["말투","톤이 높고 말이 빠르며 말이 많은 편이에요."]],
+ good:"대변을 매일 시원하게 보면 몸이 가볍고 컨디션이 좋다는 뜻이에요.",
+ bad:["변비가 생기고 가슴이 답답하거나 열이 오를 때","소변 양이 줄고 시원하지 않을 때","스트레스로 폭식하거나 체할 때"],
+ stress:"긴장하면 허둥지둥하다 일의 순서를 잊어버려요. 할 일을 적어두면 도움이 돼요.",
+ food:["🐷 돼지고기·오리","🫘 보리·팥·녹두","🦪 굴·해삼·전복","🥒 오이·배추","🍉 수박·참외·딸기"],
+ avoid:["🍗 닭고기","🍯 인삼·꿀","🌶 고추·생강 등 매운 양념","🍟 튀김·기름진 음식"],
+ life:["하루에 한 가지는 끝까지 마무리하는 연습을 해보세요.","수영·산책처럼 열을 식히는 운동이 잘 맞아요.","밤샘과 과로는 피하세요. 가장 쉽게 무너지는 지점이에요.","변비가 생기지 않게 채소와 물을 충분히 드세요."],
+ deep:[["장부","비대신소(脾大腎小) — 비의 기운이 크고 신의 기운이 작음"],["성정","노성굉포(怒性宏抱) · 애정촉급(哀情促急)"],["성질재간","장어강무(長於剛武) · 능어사무(能於事務)"],["항심","구심(懼心)"],["건강 지표","대변선통즉완실무병(大便善通則完實而無病)"],["주의 병증","흉격열증, 음허오열"],["대표 처방","형방패독산, 양격산화탕, 육미지황탕"]]},
+TE:{kr:"태음인",hz:"太陰人",emo:"🐻",color:"#4f7a3a",nick:"든든한 뚝심가",
+ one:"큰 곰처럼 묵직하게, 한번 시작하면 끝까지 해내는 사람",
+ tags:["#끈기왕","#포용력","#신중함","#먹는게좋아"],
+ mind:["변화보다 안정을 좋아하고, 낯선 상황에는 잘 나서지 않아요.","말수가 적고 속마음을 잘 드러내지 않아요.","맡은 일은 끈기 있게 끝까지 해내요.","겉보다 내실을 챙기고, 계산이 빠른 편이에요.","다만 새로운 환경에 적응하는 데 시간이 걸려요."],
+ look:[["체형","체격이 크고 뼈가 굵어요. 배와 허리가 두툼하고 목은 짧은 편이에요."],["얼굴","둥글고 넓은 얼굴에 이목구비가 큼직해요. 점잖고 후덕한 인상이에요."],["말투","목소리가 굵고 낮아요. 말이 느리고 적은 편이에요."]],
+ good:"땀을 흠뻑 흘리고 나서 개운하면 몸이 건강하다는 뜻이에요.",
+ bad:["땀이 잘 안 나고 몸이 무겁고 붓는 느낌일 때","헛배가 부르고 변이 묽어질 때","피부·눈이 건조하고 변비가 생길 때","체중이 갑자기 늘 때"],
+ stress:"긴장하면 가슴이 두근거리고 식은땀이 나요. 심호흡과 가벼운 운동이 도움이 돼요.",
+ food:["🐮 소고기","🫘 콩·두부·율무","🥛 우유·치즈","🍄 버섯·무·도라지","🌰 밤·잣·호두","🍐 배"],
+ avoid:["🍽 과식·야식","🍟 기름진 튀김","🥓 지방 많은 고기 과다","🍺 잦은 술자리"],
+ life:["등산·러닝처럼 땀을 흠뻑 내는 운동이 보약이에요.","음식은 '조금 모자란 듯할 때' 멈추세요.","미루던 일은 오늘 작게라도 시작해 보세요.","탁 트인 곳에서 크게 숨 쉬는 시간을 가져보세요."],
+ deep:[["장부","간대폐소(肝大肺小) — 간의 기운이 크고 폐의 기운이 작음"],["성정","희성광장(喜性廣張) · 낙정촉급(樂情促急)"],["성질재간","장어성취(長於成就) · 능어거처(能於居處)"],["항심","겁심(怯心)"],["건강 지표","한액통창즉완실무병(汗液通暢則完實而無病)"],["주의 병증","정충(怔忡), 조열(燥熱)"],["대표 처방","태음조위탕, 청폐사간탕, 열다한소탕"]]},
+SE:{kr:"소음인",hz:"少陰人",emo:"🌙",color:"#3b5f8f",nick:"섬세한 전략가",
+ one:"고요한 달빛처럼, 조용하지만 깊고 빈틈없는 사람",
+ tags:["#꼼꼼함","#신중함","#걱정인형","#손발차가움"],
+ mind:["나서기보다 조용히 혼자 준비하고 추진해요.","치밀하고 꼼꼼해서 실수가 적어요.","가까운 사람들과 깊고 단단한 관계를 맺어요.","단정하고 신중해서 믿음을 줘요.","다만 별일 없어도 걱정이 많고, 서운한 건 오래 남아요."],
+ look:[["체형","작고 마른 편이에요. 가슴은 좁고 골반·엉덩이가 발달해서 하체가 상체보다 굵어요."],["얼굴","갸름한 계란형에 이목구비가 오밀조밀하고 눈매가 순해요."],["말투","목소리가 작고 가늘어요. 차분하게 천천히 말해요."]],
+ good:"밥맛이 좋고 소화가 잘 되면 컨디션이 최고라는 뜻이에요.",
+ bad:["입맛이 없고 소화가 안 되거나 더부룩할 때","아랫배가 차고 변이 묽어질 때","땀을 많이 흘린 뒤 기운이 쭉 빠질 때","잠이 부족해서 하루 종일 피곤할 때"],
+ stress:"긴장하면 온몸에 힘이 빠져요. 따뜻한 차 한 잔과 충분한 잠이 최고의 약이에요.",
+ food:["🍗 닭고기·삼계탕","🐑 양고기·염소","🍚 찹쌀","🧄 부추·파·마늘·생강","🍎 사과·귤·대추"],
+ avoid:["🧊 아이스 음료·찬 음식","🐷 돼지고기","🍉 수박·참외","🍺 맥주","🍜 밀가루 과다"],
+ life:["배를 따뜻하게! 찬 음료 대신 따뜻한 차를 드세요.","격한 운동보다 걷기·요가·스트레칭이 잘 맞아요.","정해진 시간에 조금씩 꼭꼭 씹어 드세요.","걱정이 많을 땐 종이에 적어서 머릿속을 비워보세요."],
+ deep:[["장부","신대비소(腎大脾小) — 신의 기운이 크고 비의 기운이 작음"],["성정","낙성심확(樂性深確) · 희정촉급(喜情促急)"],["성질재간","장어단중(長於端重) · 능어당여(能於黨與)"],["항심","불안정지심(不安定之心)"],["건강 지표","음식선화즉완실무병(飮食善化則完實而無病)"],["주의 병증","망양(亡陽), 태음병 설사"],["대표 처방","보중익기탕, 향사양위탕, 곽향정기산"]]}
+};
+const ORDER=["TY","SY","TE","SE"];
+
+/* 궁합 (재미로 보는) */
+const C={
+"TY-TY":[58,"불꽃 튀는 두 대장","둘 다 앞장서고 싶어서 방향이 다르면 크게 부딪혀요. 대신 같은 목표를 보면 누구도 못 말리는 팀이 돼요.","분야별로 결정권을 나눠 가지세요."],
+"SY-TY":[72,"브레이크 없는 스포츠카","둘 다 빠르고 화끈해서 함께하면 일이 순식간에 진행돼요. 문제는 둘 다 브레이크가 약하다는 것!","큰 결정 전엔 하루만 쉬었다 가기로 약속하세요."],
+"TE-TY":[93,"서로의 빈칸을 채우는 짝","한 사람은 판을 열고, 한 사람은 끝까지 지켜내요. 타고난 기운이 정반대라 서로에게 없는 걸 채워줘요.","태양인은 기다려주고, 태음인은 먼저 표현해 주세요."],
+"SE-TY":[76,"대담함과 꼼꼼함","거침없는 추진력에 빈틈없는 꼼꼼함이 더해지는 조합이에요. 다만 속도 차이로 서로 답답할 수 있어요.","태양인은 말투를 부드럽게, 소음인은 생각을 말로 꺼내 주세요."],
+"SY-SY":[63,"매일이 축제, 가끔은 폭죽 사고","함께 있으면 재밌고 에너지가 넘쳐요. 하지만 둘 다 급하고 뜨거워서 작은 일로 불꽃이 튈 수 있어요.","마무리 담당을 정해두면 싸울 일이 줄어요."],
+"SY-TE":[80,"시원한 바람과 큰 나무","소양인의 활력이 태음인을 움직이게 하고, 태음인의 든든함이 소양인을 붙잡아 줘요.","소양인은 재촉하지 말고, 태음인은 반응을 조금 더 빨리!"],
+"SE-SY":[95,"뜨거움과 차분함의 완벽 밸런스","몸에 열이 많은 소양인과 차가운 소음인, 빠른 사람과 신중한 사람. 정반대라서 오히려 꼭 맞는 최고의 궁합이에요.","소양인은 소음인의 속도를 존중하고, 소음인은 소양인의 표현을 믿어 주세요."],
+"TE-TE":[70,"편안한 소파 같은 사이","말 안 해도 편하고 안정적이에요. 다만 둘 다 변화를 싫어해서 함께 미루고 함께 늘어질 수 있어요.","같이 운동하는 루틴을 만들어 보세요. 둘 다 땀 흘리면 좋아지는 체질이에요."],
+"SE-TE":[74,"느긋함과 섬세함","태음인의 넓은 품이 소음인의 걱정을 감싸줘요. 다만 둘 다 속마음 표현이 서툴러서 오해가 쌓일 수 있어요.","서운한 건 그날그날 말로 풀기로 약속하세요."],
+"SE-SE":[64,"말 안 해도 아는 사이, 걱정도 두 배","서로의 섬세함을 누구보다 잘 이해해요. 대신 걱정이 두 배가 되고, 둘 다 먼저 나서지 않아 일이 멈출 수 있어요.","결정 담당을 번갈아 맡아 보세요."]
+};
+function compat(a,b){return C[a+"-"+b]||C[b+"-"+a]}
+function hearts(s){const n=Math.round(s/20);return "♥".repeat(n)+"♡".repeat(5-n)}
+
+/* 상태 */
+let info={sex:null,age:null},ans=new Array(Q.length).fill(null),cur=0,R=null,friend=null;
+const $=id=>document.getElementById(id);
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));$(id).classList.add('on');window.scrollTo(0,0)}
+document.querySelectorAll('.seg').forEach(seg=>seg.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+  seg.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');info[seg.dataset.k]=b.textContent;}));
+
+function startQuiz(){cur=0;ans.fill(null);renderQ();go('s-quiz')}
+function renderQ(){
+  const q=Q[cur];
+  $('qcat').textContent=q.c;$('qcount').textContent=(cur+1)+" / "+Q.length;
+  $('qbar').style.width=(cur/Q.length*100)+"%";
+  $('qnum').textContent="Q"+(cur+1);
+  $('qtext').textContent=q.q;$('opts').innerHTML="";
+  q.o.forEach((o,i)=>{
+    const b=document.createElement('button');b.className='opt'+(ans[cur]===i?' sel':'');b.textContent=o[0];
+    b.onclick=()=>{ans[cur]=i;$('opts').querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');
+      setTimeout(()=>{cur<Q.length-1?(cur++,renderQ()):finish()},250)};
+    $('opts').appendChild(b);
+  });
+  $('prevBtn').style.visibility=cur===0?'hidden':'visible';
+}
+function prevQ(){if(cur>0){cur--;renderQ()}}
+
+function finish(){
+  $('qbar').style.width="100%";
+  const s={TY:0,SY:0,TE:0,SE:0};
+  ans.forEach((a,i)=>{const w=Q[i].o[a][1];for(const k in w)s[k]+=w[k]});
+  s.TY*=1.1; // 태양인 문항은 점수가 덜 모이는 편이라 약간 보정
+  const tot=Object.values(s).reduce((a,b)=>a+b,0)||1;
+  const pct={};ORDER.forEach(k=>pct[k]=Math.round(s[k]/tot*100));
+  const fix=100-ORDER.reduce((a,k)=>a+pct[k],0);
+  const ranked=[...ORDER].sort((a,b)=>s[b]-s[a]);pct[ranked[0]]+=fix;
+  R={pct,ranked,top:ranked[0],second:ranked[1],gap:pct[ranked[0]]-pct[ranked[1]],name:$('name').value.trim()};
+  go('s-load');
+  const lis=[...document.querySelectorAll('#loadList li')];lis.forEach(l=>l.classList.remove('on'));
+  lis.forEach((l,i)=>setTimeout(()=>l.classList.add('on'),350+i*480));
+  setTimeout(showResult,350+lis.length*480+450);
+}
+
+function showResult(){
+  const d=D[R.top],nm=R.name||"당신";
+  const meta=[info.age,info.sex].filter(Boolean).join(" · ");
+  $('rWho').textContent=nm+"님의 체질 풀이"+(meta?" ("+meta+")":"");
+  $('rEmo').textContent=d.emo;$('rKr').textContent=d.kr;$('rNick').textContent=d.nick;
+  $('rTitle').innerHTML=nm+"님은 <em>"+d.kr+"</em>이에요";
+  $('rOne').textContent="“"+d.one+"”";
+  $('rTags').innerHTML=d.tags.map(t=>`<span>${t}</span>`).join("");
+  $('rMeters').innerHTML=R.ranked.map(k=>`<div class="meter"><div class="row"><span>${D[k].emo} ${D[k].kr}</span><b>${R.pct[k]}%</b></div><div class="trk"><i style="background:${D[k].color}" data-w="${R.pct[k]}"></i></div></div>`).join("");
+  setTimeout(()=>document.querySelectorAll('#rMeters i').forEach(i=>i.style.width=Math.min(100,i.dataset.w*1.6)+"%"),80);
+  const sd=D[R.second];
+  $('rClarity').textContent=R.gap>=12?`${d.kr} 특징이 뚜렷하게 나타났어요.`
+    :R.gap>=5?`${d.kr} 특징이 가장 강하고, ${sd.kr} 특징도 조금 섞여 있어요.`
+    :`${d.kr}와 ${sd.kr} 특징이 비슷하게 나왔어요. 이럴 땐 한의원에서 직접 감별받아 보는 걸 추천해요.`;
+  $('rMind').innerHTML=d.mind.map(x=>`<li>${x}</li>`).join("");
+  $('rLook').innerHTML=d.look.map(x=>`<div><b>${x[0]}</b>${x[1]}</div>`).join("");
+  $('rGood').innerHTML=`<b>🟢 컨디션이 좋다는 신호</b>${d.good}`;
+  $('rBad').innerHTML=`<b>🔴 이럴 땐 몸이 지쳤다는 신호</b><ul>${d.bad.map(x=>`<li>${x}</li>`).join("")}</ul>`;
+  $('rStress').innerHTML=`<b>😣 긴장하면 이렇게 돼요</b>${d.stress}`;
+  $('rFood').innerHTML=d.food.map(x=>`<li>${x}</li>`).join("");
+  $('rAvoid').innerHTML=d.avoid.map(x=>`<li>${x}</li>`).join("");
+  $('rLife').innerHTML=d.life.map(x=>`<li>${x}</li>`).join("");
+  $('rDeep').innerHTML=`<dt>한자 표기</dt><dd>${d.hz}</dd>`+d.deep.map(x=>`<dt>${x[0]}</dt><dd>${x[1]}</dd>`).join("")+`<dt></dt><dd style="font-size:12px;color:var(--muted)">※ 처방은 반드시 한의사 진찰 후에 받아야 해요</dd>`;
+  // 궁합 리스트
+  const list=[...ORDER].sort((a,b)=>compat(R.top,b)[0]-compat(R.top,a)[0]);
+  $('rCompatList').innerHTML=list.map((k,i)=>{const c=compat(R.top,k);
+    return `<div class="compat-row" onclick="showCompatDetail('${k}')"><span class="e">${D[k].emo}</span><span class="t">${D[k].kr} ${i===0?'<b style="color:var(--red)">찰떡궁합</b>':''}<small>${c[1]}</small></span><span><span class="hearts">${hearts(c[0])}</span><br><span class="s">${c[0]}점</span></span></div>`}).join("");
+  $('rCompatDetail').innerHTML="";
+  // 친구 링크로 들어온 경우
+  $('rFriendCompat').innerHTML=friend?`<div class="paper sec"><h3>💞 ${esc(friend.name||"친구")}님과 나의 궁합</h3>${compatCard(R.top,friend.top,nm,friend.name||"친구")}</div>`:"";
+  $('cardWrap').style.display="none";
+  go('s-result');
+}
+function showCompatDetail(k){$('rCompatDetail').innerHTML=compatCard(R.top,k,"나",D[k].kr);$('rCompatDetail').scrollIntoView({behavior:'smooth',block:'nearest'})}
+function compatCard(a,b,na,nb){const c=compat(a,b);
+  return `<div class="ccard"><div class="pair">${D[a].emo}<span>♥</span>${D[b].emo}</div><div class="names">${esc(na)} (${D[a].kr}) × ${esc(nb)} (${D[b].kr})</div><div class="score">${c[0]}점</div><div class="ctitle">${c[1]}</div><p>${c[2]}</p><div class="tip">💡 ${c[3]}</div></div>`}
+function esc(s){return String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]))}
+
+/* 궁합만 보기 */
+let pa=null,pb=null;
+function openCompatPicker(){
+  pa=friend?null:null;pb=friend?friend.top:null;
+  ["pickA","pickB"].forEach(id=>{$(id).innerHTML=ORDER.map(k=>`<button data-k="${k}"><span>${D[k].emo}</span>${D[k].kr}</button>`).join("");
+    $(id).querySelectorAll('button').forEach(b=>{if(id==="pickB"&&b.dataset.k===pb)b.classList.add('sel');
+      b.onclick=()=>{$(id).querySelectorAll('button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');
+      if(id==="pickA")pa=b.dataset.k;else pb=b.dataset.k;renderPick()}})});
+  $('compatOut').innerHTML="";go('s-compat');
+}
+function renderPick(){$('compatOut').innerHTML=(pa&&pb)?compatCard(pa,pb,"나",friend&&pb===friend.top?(friend.name||"친구"):"상대"):""}
+
+/* 공유: 링크 (#r-체질-비율4개-이름hex) */
+function hexName(s){return Array.from(new TextEncoder().encode(s)).map(b=>b.toString(16).padStart(2,"0")).join("")}
+function unhex(h){try{const a=new Uint8Array(h.match(/../g).map(x=>parseInt(x,16)));return new TextDecoder().decode(a)}catch(e){return ""}}
+function shareURL(){return PAGE_URL+"#r-"+R.top.toLowerCase()+"-"+ORDER.map(k=>R.pct[k]).join("-")+(R.name?"-"+hexName(R.name.slice(0,8)):"")}
+function copyLink(){
+  const d=D[R.top],nm=R.name||"나";
+  const txt=`${d.emo} ${nm}의 사상체질은 [${d.kr}] — ${d.nick}!\n“${d.one}”\n\n너는 무슨 체질이야? 테스트하면 우리 궁합도 나와 💞\n👉 ${shareURL()}`;
+  copyText(txt,"복사 완료! 카톡 채팅방에 붙여넣으세요");
+}
+function copyText(t,msg){
+  const ok=()=>toast(msg);
+  try{navigator.clipboard.writeText(t).then(ok,()=>fb(t,msg))}catch(e){fb(t,msg)}
+}
+function fb(t,msg){const ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');toast(msg)}catch(e){toast("복사에 실패했어요")}ta.remove()}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2000)}
+
+/* 결과 카드 이미지 */
+async function makeCard(){
+  try{await Promise.all([document.fonts.load('800 60px "Nanum Myeongjo"'),document.fonts.load('30px "Gowun Dodum"')])}catch(e){}
+  const d=D[R.top],nm=R.name||"나",W=1080,H=1350,cv=document.createElement('canvas');cv.width=W;cv.height=H;
+  const x=cv.getContext('2d');
+  const g=x.createRadialGradient(W/2,0,50,W/2,0,H);g.addColorStop(0,"#3a2a4a");g.addColorStop(1,"#16111c");x.fillStyle=g;x.fillRect(0,0,W,H);
+  x.strokeStyle="#d6a84f";x.lineWidth=4;x.strokeRect(40,40,W-80,H-80);x.lineWidth=1.5;x.strokeRect(58,58,W-116,H-116);
+  x.textAlign="center";
+  x.fillStyle="#cbbfae";x.font='34px "Gowun Dodum"';x.fillText(nm+"님의 사상체질 풀이",W/2,150);
+  x.beginPath();x.arc(W/2,360,160,0,Math.PI*2);x.fillStyle="#241b2e";x.fill();x.strokeStyle="#d6a84f";x.lineWidth=4;x.stroke();
+  x.font='150px sans-serif';x.fillText(d.emo,W/2,415);
+  x.fillStyle="#f1d18a";x.font='800 96px "Nanum Myeongjo"';x.fillText(d.kr,W/2,640);
+  x.font='bold 40px "Gowun Dodum"';const tw=x.measureText(d.nick).width+60;
+  x.fillStyle="#f1d18a";roundRect(x,W/2-tw/2,675,tw,66,33);x.fill();x.fillStyle="#16111c";x.fillText(d.nick,W/2,722);
+  x.fillStyle="#e4d9c7";x.font='34px "Gowun Dodum"';wrap(x,"“"+d.one+"”",W/2,810,860,50);
+  // bars
+  let y=930;R.ranked.forEach(k=>{x.textAlign="left";x.fillStyle="#f6efe1";x.font='32px "Gowun Dodum"';x.fillText(D[k].kr,150,y+10);
+    x.fillStyle="rgba(255,255,255,.12)";roundRect(x,300,y-14,560,30,15);x.fill();x.fillStyle=D[k].color;roundRect(x,300,y-14,Math.max(30,560*Math.min(1,R.pct[k]*1.6/100)),30,15);x.fill();
+    x.textAlign="right";x.fillStyle="#f1d18a";x.fillText(R.pct[k]+"%",940,y+10);y+=64});
+  x.textAlign="center";x.fillStyle="#d6a84f";x.font='32px "Gowun Dodum"';x.fillText(d.tags.join("  "),W/2,1225);
+  x.fillStyle="#7f7465";x.font='26px "Gowun Dodum"';x.fillText("사상체질 풀이 · 너는 무슨 체질이야?",W/2,1278);
+  const url=cv.toDataURL("image/png");$('cardImg').src=url;$('imgSaveBtn').href=url;
+  cv.toBlob(b=>{cardBlob=b;try{const f=new File([b],"사상체질_결과.png",{type:"image/png"});
+    if(navigator.canShare&&navigator.canShare({files:[f]}))$('imgShareBtn').style.display='block'}catch(e){}});$('cardWrap').style.display="block";
+  $('cardWrap').scrollIntoView({behavior:'smooth',block:'center'});
+}
+function roundRect(x,a,b,w,h,r){x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+w,b,r);x.closePath()}
+function wrap(x,t,cx,y,max,lh){let line="";const lines=[];for(const ch of t){if(x.measureText(line+ch).width>max){lines.push(line);line=ch}else line+=ch}lines.push(line);lines.forEach((l,i)=>x.fillText(l,cx,y+i*lh))}
+
+let cardBlob=null;
+async function shareImage(){try{const f=new File([cardBlob],"사상체질_결과.png",{type:"image/png"});
+  await navigator.share({files:[f],title:"사상체질 풀이",text:shareURL()})}catch(e){}}
+function kakaoShare(){const d=D[R.top],nm=R.name||"나";
+  try{Kakao.Share.sendDefault({objectType:'feed',content:{title:`${d.emo} ${nm}의 체질은 ${d.kr}! — ${d.nick}`,
+    description:"너는 무슨 체질이야? 테스트하면 우리 궁합도 나와 💞",imageUrl:OG_IMAGE,
+    link:{mobileWebUrl:shareURL(),webUrl:shareURL()}},
+    buttons:[{title:'내 체질도 보기',link:{mobileWebUrl:shareURL(),webUrl:shareURL()}}]})}catch(e){copyLink()}}
+function restart(){ans.fill(null);go('s-home')}
+
+/* 친구 링크로 들어온 경우 */
+function readHash(){
+  const h=(location.hash||"").slice(1),m=h.match(/^r-(ty|sy|te|se)-(\d+)-(\d+)-(\d+)-(\d+)(?:-([0-9a-f]+))?$/);
+  if(!m){friend=null;$('friendBanner').innerHTML="";return}
+  friend={top:m[1].toUpperCase(),pct:{TY:+m[2],SY:+m[3],TE:+m[4],SE:+m[5]},name:m[6]?unhex(m[6]):""};
+  const d=D[friend.top],fn=esc(friend.name||"친구");
+  $('friendBanner').innerHTML=`<div class="friend-banner"><div style="font-size:40px">${d.emo}</div><b>${fn}</b>님은 <b>${d.kr}</b> — ${d.nick}<br><span style="font-size:13px;color:#cbbfae">나도 테스트하면 ${fn}님과의 궁합이 나와요!</span></div>`;
+}
+window.addEventListener('hashchange',()=>{readHash();go('s-home')});
+readHash();
+</script>
+</body>
+</html>
