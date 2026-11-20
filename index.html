@@ -382,7 +382,7 @@ details summary::after{content:" ▾";color:var(--muted)}
     <button class="closex" onclick="closePay()">✕</button>
     <div class="title-s">🔮 상세풀이 열기</div>
     <div class="desc-s">한 번 결제하면 이 기기에서 계속 볼 수 있어요.</div>
-    <div class="step"><span class="n">1</span><div class="c"><b>990원을 보내주세요</b><br>보낼 때 메모에 주문번호 <span class="order" id="orderNo"></span>을 적어주시면 좋아요.
+    <div class="step"><span class="n">1</span><div class="c"><b>990원을 보내주세요</b><br>버튼을 누르면 카카오페이가 열려요. 금액(990원)을 확인하고, 메모에 주문번호 <span class="order" id="orderNo"></span>을 적어주시면 좋아요.
       <div id="payBtns"></div></div></div>
     <div class="step"><span class="n">2</span><div class="c"><b>보내셨으면 입금자명을 적고 눌러주세요</b>
       <input type="text" id="payerIn" placeholder="입금자명" maxlength="10" autocomplete="off" style="margin-top:8px">
@@ -410,9 +410,9 @@ const OG_IMAGE="https://sasang-test.github.io/og.png";
 /* ===== 결제 안내 설정 (여기만 바꾸면 돼요) ===== */
 const PAY={
   price:"990원",
-  kakaopay:"",        // 카카오페이 송금 링크 (예: https://qr.kakaopay.com/xxxx)
+  kakaopay:"https://qr.kakaopay.com/FPgeFkAPs1ef09684",
   toss:"",            // 토스 송금 링크 (예: https://toss.me/아이디/990)
-  account:"토스뱅크 1000-0656-1434",
+  account:"",
   contact:"",         // 코드 받을 연락처 링크 (예: 카카오톡 오픈채팅 https://open.kakao.com/o/xxxx)
   contactLabel:"카카오톡 오픈채팅으로 주문번호 보내기"
 };
