@@ -349,10 +349,11 @@ details summary::after{content:" ▾";color:var(--muted)}
   </div>
 
   <div class="share-box">
-    <h3>카톡으로 공유하기</h3>
+    <h3>친구에게 공유하기</h3>
     <p>친구가 링크를 열면 내 결과를 보고, 테스트를 마치면 <b style="color:var(--gold2)">우리 둘의 궁합</b>이 바로 나와요.</p>
     <button class="btn kakao" id="kakaoBtn" style="display:none" onclick="kakaoShare()">💬 카카오톡으로 공유하기</button>
-    <button class="btn kakao mt10" onclick="copyLink()">🔗 결과 링크 복사 → 카톡에 붙여넣기</button>
+    <button class="btn kakao mt10" onclick="shareResult()">📤 친구에게 공유하기</button>
+    <button class="btn dark mt10" onclick="copyLink()">🔗 링크만 복사하기</button>
     <button class="btn dark mt10" onclick="makeCard()">🖼 결과 카드 이미지 만들기</button>
     <div id="cardWrap"><img id="cardImg" alt="사상체질 결과 카드"><small>이미지를 꾹 눌러 저장하거나 아래 버튼을 눌러주세요</small>
       <button class="btn dark mt10" id="imgShareBtn" style="display:none" onclick="shareImage()">📤 이미지 바로 보내기</button>
@@ -807,6 +808,12 @@ function renderPick(){$('compatOut').innerHTML=(pa&&pb)?compatCard(pa,pb,"나",f
 function hexName(s){return Array.from(new TextEncoder().encode(s)).map(b=>b.toString(16).padStart(2,"0")).join("")}
 function unhex(h){try{const a=new Uint8Array(h.match(/../g).map(x=>parseInt(x,16)));return new TextDecoder().decode(a)}catch(e){return ""}}
 function shareURL(){return PAGE_URL+"#r-"+R.top.toLowerCase()+"-"+ORDER.map(k=>R.pct[k]).join("-")+(R.name?"-"+hexName(R.name.slice(0,8)):"")}
+function shareText(){const d=D[R.top],nm=R.name||"나";return `${d.emo} ${nm}의 사상체질은 [${d.kr}] — ${d.nick}!\n“${d.one}”\n\n너는 무슨 체질이야? 테스트하면 우리 궁합도 나와 💞`}
+function shareResult(){
+  const url=shareURL(),t=shareText();
+  if(navigator.share){navigator.share({title:"사상체질 풀이",text:t+"\n👉 "+url}).catch(e=>{if(e&&e.name!=="AbortError")copyLink()});return}
+  copyLink();
+}
 function copyLink(){
   const d=D[R.top],nm=R.name||"나";
   const txt=`${d.emo} ${nm}의 사상체질은 [${d.kr}] — ${d.nick}!\n“${d.one}”\n\n너는 무슨 체질이야? 테스트하면 우리 궁합도 나와 💞\n👉 ${shareURL()}`;
